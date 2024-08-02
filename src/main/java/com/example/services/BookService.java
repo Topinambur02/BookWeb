@@ -2,35 +2,28 @@ package com.example.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.entities.Book;
 import com.example.repositories.BookRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class BookService {
     
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
     public List<Book> getAllBooks() {
-        try {
-            return this.bookRepository.findAll();
-        } 
-        
-        catch(NullPointerException e) {
-            e.printStackTrace();
-            return List.of();
-        }
+        return this.bookRepository.findAll();
     }
 
     public Book createBook(Book book) {
         return this.bookRepository.save(book);
     }
 
-    public ResponseEntity<Book> updateBook(Long id, Book book) {
+    public Book updateBook(Long id, Book book) {
         Book updatedBook = this.bookRepository.findById(id).get();
 
         updatedBook.setName(book.getName());
@@ -39,12 +32,11 @@ public class BookService {
         updatedBook.setAuthor(book.getAuthor());
         updatedBook.setCount(book.getCount());
 
-        return ResponseEntity.ok(updatedBook);
+        return updatedBook;
     }
 
-    public ResponseEntity<String> deleteBook(Long id) {
+    public void deleteBook(Long id) {
         this.bookRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
 }

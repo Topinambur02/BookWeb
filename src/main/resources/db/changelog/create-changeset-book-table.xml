@@ -6,10 +6,13 @@
 
    <changeSet id="create_table_book" author="Alex Tyrdanov">
 
+    <preConditions onFail="MARK_RAN">
+        <not>
+            <tableExists tableName="book"/>
+        </not>
+    </preConditions>
     <!-- <sql>CREATE TYPE Cover AS ENUM ('HARD', 'SOFT')</sql> -->
-      <!-- Прописываем создание таблицы book-->
        <createTable tableName="book">
-        <!--Создаем поля -->
            <column autoIncrement="true" name="id" type="bigint">
                <constraints primaryKey="true" nullable="false"/>
            </column>

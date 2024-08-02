@@ -2,7 +2,6 @@ package com.example.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entities.Book;
 import com.example.services.BookService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/books")
 public class BookController {
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
 
     @PostMapping
     public ResponseEntity<Book> create(@RequestBody Book book) {
@@ -28,17 +29,18 @@ public class BookController {
     }
     
     @GetMapping
-    public List<Book> getAll() {
-        return this.bookService.getAllBooks();
+    public ResponseEntity<List<Book>> getAll() {
+        return ResponseEntity.ok().body(this.bookService.getAllBooks());
     }
 
     @PutMapping
     public ResponseEntity<Book> update(@PathVariable Long id, @RequestBody Book book) {
-        return this.bookService.updateBook(id, book);
+        return ResponseEntity.ok().body(this.bookService.updateBook(id, book));
     }
 
     @DeleteMapping
     public ResponseEntity<String> delete(@PathVariable( value = "id") Long id) {
-        return this.bookService.deleteBook(id);
+        this.bookService.deleteBook(id);
+        return ResponseEntity.ok().body("Book deleted");
     }
 }
