@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="insert-into-book" author="Alex Tyrdanov">
+        <!-- <preConditions onFail="WARN">
+            <sqlCheck expectedResult="4">SELECT COUNT(*) FROM </sqlCheck>
+        </preConditions> -->
+
+        <insert tableName="book">
+            <column name="name" value="Test3"/>
+            <column name="brand" value="Test3"/>
+            <column name="cover" value="SOFT"/>
+            <column name="author" value="Test3"/>
+            <column name="count" value="10"/>
+        </insert>
+
+        <insert tableName="book">
+            <column name="name" value="Test4"/>
+            <column name="brand" value="Test4"/>
+            <column name="cover" value="SOFT"/>
+            <column name="author" value="Test4"/>
+            <column name="count" value="20"/>
+        </insert>
+
+        <insert tableName="book">
+            <column name="name" value="Test0"/>
+            <column name="brand" value="Test0"/>
+            <column name="cover" value="HARD"/>
+            <column name="author" value="Test0"/>
+            <column name="count" value="5"/>
+        </insert>
+    
+    </changeSet>
+</databaseChangeLog>
