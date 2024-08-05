@@ -25,7 +25,7 @@ public class BookController {
 
     @PostMapping
     public ResponseEntity<Book> create(@RequestBody Book book) {
-        return ResponseEntity.ok(this.bookService.createBook(book));
+        return ResponseEntity.ok().body(this.bookService.createBook(book));
     }
     
     @GetMapping
