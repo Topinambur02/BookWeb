@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.entities.Book;
+import com.example.dto.BookDto;
 import com.example.services.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,18 +24,18 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<Book> create(@RequestBody Book book) {
-        return ResponseEntity.ok().body(this.bookService.createBook(book));
+    public ResponseEntity<BookDto> create(@RequestBody BookDto bookDto) {
+        return ResponseEntity.ok().body(this.bookService.createBook(bookDto));
     }
     
     @GetMapping
-    public ResponseEntity<List<Book>> getAll() {
+    public ResponseEntity<List<BookDto>> getAll() {
         return ResponseEntity.ok().body(this.bookService.getAllBooks());
     }
 
     @PutMapping
-    public ResponseEntity<Book> update(@RequestBody Book book) {
-        return ResponseEntity.ok().body(this.bookService.updateBook(book.getId(), book));
+    public ResponseEntity<BookDto> update(@RequestBody BookDto bookDto) {
+        return ResponseEntity.ok().body(this.bookService.updateBook(bookDto.getId(), bookDto));
     }
 
     @DeleteMapping("/{id}")

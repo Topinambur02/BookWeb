@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.dto.BookDto;
 import com.example.entities.Book;
+import com.example.mapper.BookMapper;
 import com.example.repositories.BookRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,24 +17,31 @@ public class BookService {
     
     private final BookRepository bookRepository;
 
-    public List<Book> getAllBooks() {
-        return this.bookRepository.findAll();
+    private final BookMapper bookMapper;
+
+    public List<BookDto> getAllBooks() {
+        return this.bookRepository.findAll()
+                                  .stream()
+                                  .map(this.bookMapper::toDto)
+                                  .toList();
     }
 
-    public Book createBook(Book book) {
-        return this.bookRepository.save(book);
+    public BookDto createBook(BookDto bookDto) {
+        Book book = this.bookMapper.toBook(bookDto);
+        book = this.bookRepository.save(book);
+        return this.bookMapper.toDto(book);
     }
 
-    public Book updateBook(Long id, Book book) {
+    public BookDto updateBook(Long id, BookDto bookDto) {
         Book updatedBook = this.bookRepository.findById(id).get();
 
-        updatedBook.setName(book.getName());
-        updatedBook.setBrand(book.getBrand());
-        updatedBook.setCover(book.getCover());
-        updatedBook.setAuthor(book.getAuthor());
-        updatedBook.setCount(book.getCount());
+        updatedBook.setName(bookDto.getName());
+        updatedBook.setBrand(bookDto.getBrand());
+        updatedBook.setCover(bookDto.getCover());
+        updatedBook.setAuthor(bookDto.getAuthor());
+        updatedBook.setCount(bookDto.getCount());
 
-        return updatedBook;
+        return this.bookMapper.toDto(updatedBook);
     }
 
     public void deleteBook(Long id) {
