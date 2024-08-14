@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.entity.Book;
+import com.example.dto.BookDto;
+import com.example.mapper.BookMapper;
 import com.example.repository.BookRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -12,27 +13,29 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class BookService {
-    
+
     private final BookRepository repository;
 
-    public List<Book> getAll() {
-        return repository.findAll();
+    private final BookMapper mapper;
+
+    public List<BookDto> getAll() {
+        return repository
+                .findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
-    public Book create(Book book) {
-        return repository.save(book);
+    public BookDto create(BookDto dto) {
+        final var book = mapper.toBook(dto);
+        repository.save(book);
+        return mapper.toDto(book);
     }
 
-    public Book update(Long id, Book book) {
+    public BookDto update(Long id, BookDto dto) {
         final var updatedBook = repository.findById(id).get();
-
-        updatedBook.setName(book.getName());
-        updatedBook.setBrand(book.getBrand());
-        updatedBook.setCover(book.getCover());
-        updatedBook.setAuthor(book.getAuthor());
-        updatedBook.setCount(book.getCount());
-
-        return updatedBook;
+        mapper.update(dto, updatedBook);
+        return mapper.toDto(updatedBook);
     }
 
     public void delete(Long id) {
