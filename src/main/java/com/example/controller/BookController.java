@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.entity.Book;
+import com.example.dto.BookDto;
 import com.example.service.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,20 +26,20 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public Book create(@RequestBody Book book) {
-        return service.create(book);
+    public BookDto create(@RequestBody BookDto dto) {
+        return service.create(dto);
     }
     
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> getAll() {
+    public List<BookDto> getAll() {
         return service.getAll();
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Book update(@RequestBody Book book) {
-        return service.update(book.getId(), book);
+    public BookDto update(@RequestBody BookDto dto) {
+        return service.update(dto.getId(), dto);
     }
 
     @DeleteMapping("/{id}")
