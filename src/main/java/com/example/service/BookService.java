@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.dto.BookDto;
+import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.BookMapper;
+import com.example.repository.AuthorRepository;
 import com.example.repository.BookRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class BookService {
 
     private final BookRepository repository;
-
+    private final AuthorRepository authorRepository;
     private final BookMapper mapper;
 
     public List<BookDto> getAll() {
@@ -27,14 +29,23 @@ public class BookService {
     }
 
     public BookDto create(BookDto dto) {
-        final var book = mapper.toBook(dto);
-        repository.save(book);
-        return mapper.toDto(book);
+        final var author = authorRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+
+        final var book = mapper.toBook(dto, author);
+        final var savedBook = repository.save(book);
+
+        return mapper.toDto(savedBook);
     }
 
     public BookDto update(Long id, BookDto dto) {
-        final var updatedBook = repository.findById(id).get();
-        mapper.update(dto, updatedBook);
+        final var updatedBook = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        final var author = authorRepository.findById(dto.getAuthorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+
+        mapper.update(dto, author, updatedBook);
         return mapper.toDto(updatedBook);
     }
 

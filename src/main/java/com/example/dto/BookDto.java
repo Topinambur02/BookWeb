@@ -10,6 +10,6 @@ public class BookDto {
     private String name;
     private String brand;
     private Cover cover;
-    private String author;
+    private Long authorId;
     private Integer count;
 }
