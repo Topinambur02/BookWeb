@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -30,7 +32,9 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private Cover cover;
 
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = true)
+    private Author author;
 
     private Integer count;
 
