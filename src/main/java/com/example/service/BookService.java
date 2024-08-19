@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.dto.BookDto;
 import com.example.exception.ResourceNotFoundException;
+import com.example.filter.BookFilter;
 import com.example.mapper.BookMapper;
 import com.example.repository.AuthorRepository;
 import com.example.repository.BookRepository;
+import com.example.specification.BookSpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +21,7 @@ public class BookService {
     private final BookRepository repository;
     private final AuthorRepository authorRepository;
     private final BookMapper mapper;
+    private final BookSpecification specification;
 
     public List<BookDto> getAll() {
         return repository
@@ -51,6 +54,16 @@ public class BookService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public List<BookDto> filter(BookFilter filter) {;
+        final var bookSpecification = specification.filter(filter);
+
+        return repository
+                .findAll(bookSpecification)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
 }
