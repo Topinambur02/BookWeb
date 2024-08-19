@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dto.BookDto;
+import com.example.filter.BookFilter;
 import com.example.service.BookService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,11 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public List<BookDto> getAll() {
         return service.getAll();
+    }
+
+    @GetMapping("/filter")
+    public List<BookDto> filter(@RequestBody BookFilter filter) {
+        return service.filter(filter);
     }
 
     @PutMapping
