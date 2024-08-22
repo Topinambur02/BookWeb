@@ -10,5 +10,6 @@
        <include file="create-one-to-many-changeset.xml" relativeToChangelogFile="true" />
        <include file="insert-changeset-author-table.xml" relativeToChangelogFile="true" />
        <include file="insert-changeset-book-table.xml" relativeToChangelogFile="true" />
+       <include file="create-changeset-user-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
