@@ -18,6 +18,7 @@ public interface UserMapper {
     @Mapping(target = "password", source = ".", qualifiedByName = "encodePassword")
     @Mapping(target = "role", constant = "GUEST")
     @Mapping(target = "authorities", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
     User toUser(SignUpDto user);
 
     @Named("encodePassword")
