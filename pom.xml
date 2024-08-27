@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.2</version>
+		<version>3.3.3</version>
 		<relativePath />
 	</parent>
 	<groupId>com.example</groupId>
@@ -70,6 +70,12 @@
 			<version>6.2.7.Final</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.12.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -78,7 +84,6 @@
 			<plugin>
 				<groupId>org.liquibase</groupId>
 				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>4.3.5</version>
 				<configuration>
 					<propertyFile>src/main/resources/liquibase.properties</propertyFile>
 				</configuration>
@@ -87,7 +92,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
 
 				<configuration>
 					<source>${java.version}</source>

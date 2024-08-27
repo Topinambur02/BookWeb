@@ -10,10 +10,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.filter.JwtFilter;
+import com.example.security.JwtUtils;
+import com.example.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtUtils utils;
+
+    private final UserService service;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -25,7 +37,13 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/books", true))
+                .addFilterBefore(authenticationJwtTokenFilter(utils, service), UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    JwtFilter authenticationJwtTokenFilter(JwtUtils utils, UserService service) {
+        return new JwtFilter(utils, service);
     }
 
     @Bean
@@ -39,7 +57,7 @@ public class SecurityConfig {
 
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        
+
         return new ProviderManager(daoAuthenticationProvider);
     }
 

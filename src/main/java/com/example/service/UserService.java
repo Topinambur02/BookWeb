@@ -1,6 +1,7 @@
 package com.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +23,7 @@ public class UserService implements UserDetailsService {
     private final UserMapper mapper;
 
     @Autowired
+    @Lazy
     private AuthService authService;
 
     public SignUpDto signUp(SignUpDto dto) {
