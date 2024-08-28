@@ -40,17 +40,11 @@ public class User implements UserDetails {
 
     private Date createdDate;
 
+    private String confirmationCode;
+
     @PrePersist
     public void prePersist() {
         createdDate = new Date();
-    }
-
-    public UserDetails toDetails() {
-        return org.springframework.security.core.userdetails.User
-                .withUsername(this.username)
-                .password(this.password)
-                .roles(this.role.name())
-                .build();
     }
 
     @Override

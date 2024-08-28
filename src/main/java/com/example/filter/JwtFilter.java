@@ -2,7 +2,6 @@ package com.example.filter;
 
 import java.io.IOException;
 
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -35,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (!isBearer) {
             filterChain.doFilter(request, response);
-            throw new AccessDeniedException("Data not found");
+            return;
         }
 
         final var jwt = authorizationHeader.substring(prefixLength);
