@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dto.SignInDto;
 import com.example.dto.SignUpDto;
+import com.example.dto.TokenResponse;
 import com.example.encryption.EncryptionUtils;
 import com.example.dto.ConfirmRegistrationResponse;
 import com.example.entity.User;
@@ -86,7 +87,7 @@ public class UserService implements UserDetailsService {
         return response;
     }
 
-    public String signIn(SignInDto dto) {
+    public TokenResponse signIn(SignInDto dto) {
         return authService.signIn(dto);
     }
 

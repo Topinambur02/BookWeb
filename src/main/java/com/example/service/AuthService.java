@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.example.dto.SignInDto;
+import com.example.dto.TokenResponse;
 import com.example.security.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class AuthService {
 
     private final JwtUtils jwtUtils;
 
-    public String signIn(SignInDto dto) {
+    public TokenResponse signIn(SignInDto dto) {
         final var username = dto.getUsername();
         final var password = dto.getPassword();
 
@@ -26,6 +27,9 @@ public class AuthService {
 
         final var jwt = jwtUtils.generateJwtToken(auth);
 
-        return jwt;
+        final var response = new TokenResponse();
+        response.setToken(jwt);
+
+        return response;
     }
 }
