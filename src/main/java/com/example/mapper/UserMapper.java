@@ -19,6 +19,7 @@ public interface UserMapper {
     @Mapping(target = "role", constant = "GUEST")
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "confirmationCode", ignore = true)
     User toUser(SignUpDto user);
 
     @Named("encodePassword")
@@ -27,6 +28,7 @@ public interface UserMapper {
     }
 
     @Mapping(target = "authorities", ignore = true)
+    @Mapping(target = "confirmationCode", ignore = true)
     User toUser(SignInDto user, String email, Date createdDate, Role role);
 
     SignInDto toSignInDto(User user);
