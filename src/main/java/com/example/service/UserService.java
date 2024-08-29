@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dto.SignInDto;
 import com.example.dto.SignUpDto;
+import com.example.encryption.EncryptionUtils;
 import com.example.dto.ConfirmRegistrationResponse;
 import com.example.entity.User;
 import com.example.enums.Role;
@@ -29,6 +30,8 @@ public class UserService implements UserDetailsService {
 
     private final UserMapper mapper;
 
+    private final EncryptionUtils encryptionUtils;
+
     @Autowired
     @Lazy
     private AuthService authService;
@@ -36,6 +39,7 @@ public class UserService implements UserDetailsService {
     public SignUpDto signUp(SignUpDto dto) {
         final var username = dto.getUsername();
         final var email = dto.getEmail();
+
         final var isExists = repository.existsByUsername(username);
 
         if (isExists) {
@@ -47,17 +51,23 @@ public class UserService implements UserDetailsService {
         final var confirmationLink = String.format("http://localhost:8080/api/users/register/%s", confirmationCode);
         final var message = String.format("Hello, %s!\nYour activation link: %s", username, confirmationLink);
 
-        user.setConfirmationCode(confirmationCode);
+        final var encryptedEmail = encryptionUtils.encrypt(email);
+        final var encryptedConfirmationCode = encryptionUtils.encrypt(confirmationCode);
 
-        emailService.sendMessage(email, "Registration", message);
+        user.setEmail(encryptedEmail);
+        user.setConfirmationCode(encryptedConfirmationCode);
+
+        emailService.sendMessage(email, "Confirm registration", message);
 
         final var savedUser = repository.save(user);
+
         return mapper.toSignUpDto(savedUser);
     }
 
     public ConfirmRegistrationResponse confirmRegistration(String generatedString, Authentication authentication) {
         final var user = (User) authentication.getPrincipal();
-        final var confirmationCode = user.getConfirmationCode();
+        final var encryptedConfirmationCode = user.getConfirmationCode();
+        final var confirmationCode = encryptionUtils.decrypt(encryptedConfirmationCode);
         final var isCorrect = generatedString.equals(confirmationCode);
         final var response = new ConfirmRegistrationResponse();
 
