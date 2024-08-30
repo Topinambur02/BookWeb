@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.example.exception.GlobalExceptionHandler;
 import com.example.filter.JwtFilter;
 import com.example.security.JwtUtils;
 import com.example.service.UserService;
@@ -27,14 +28,17 @@ public class SecurityConfig {
 
     private final UserService service;
 
+    private final GlobalExceptionHandler exceptionHandler;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/users/signup", "/users/signin").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/users/signup", "/users/signin", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
+                .anonymous(anonymous -> anonymous.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(exceptionHandler))
                 .formLogin(login -> login
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/books", true))
