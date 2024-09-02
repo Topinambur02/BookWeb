@@ -70,7 +70,7 @@ public class BookController {
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public BookDto update(@RequestBody BookDto dto) {
-        return service.update(dto.getId(), dto);
+        return service.update(dto);
     }
 
     @Operation(summary = "Удалить книгу", description = "Удаляет книгу по ID")
@@ -79,7 +79,7 @@ public class BookController {
     })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable @Parameter(description = "ID книги", example = "1") Long id) {
-        service.delete(id);
+    public Long delete(@PathVariable @Parameter(description = "ID книги", example = "1") Long id) {
+        return service.delete(id);
     }
 }
