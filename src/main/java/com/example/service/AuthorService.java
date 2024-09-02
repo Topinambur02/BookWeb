@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthorService {
 
     private final AuthorRepository repository;
+    
     private final BookRepository bookRepository;
 
     private final AuthorMapper mapper;
@@ -29,7 +30,8 @@ public class AuthorService {
     }
 
     public AuthorDto create(AuthorDto dto) {
-        final var books = bookRepository.findAllById(dto.getBookIds());
+        final var ids = dto.getBookIds();
+        final var books = bookRepository.findAllById(ids);
         final var author = mapper.toAuthor(dto, books);
         final var savedAuthor = repository.save(author);
 

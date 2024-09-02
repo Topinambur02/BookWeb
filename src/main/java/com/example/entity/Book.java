@@ -38,4 +38,15 @@ public class Book {
 
     private Integer count;
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", brand='" + brand + '\'' +
+                ", cover=" + cover +
+                ", author=" + author +
+                ", count=" + count +
+                '}';
+    }
 }

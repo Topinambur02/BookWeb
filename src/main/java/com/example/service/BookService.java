@@ -32,7 +32,9 @@ public class BookService {
     }
 
     public BookDto create(BookDto dto) {
-        final var author = authorRepository.findById(dto.getAuthorId())
+        final var id = dto.getAuthorId();
+
+        final var author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         final var book = mapper.toBook(dto, author);
@@ -41,19 +43,32 @@ public class BookService {
         return mapper.toDto(savedBook);
     }
 
-    public BookDto update(Long id, BookDto dto) {
+    public BookDto update(BookDto dto) {
+        final var id = dto.getId();
+        final var authorId = dto.getAuthorId();
+
         final var updatedBook = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
 
-        final var author = authorRepository.findById(dto.getAuthorId())
+        final var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
 
         mapper.update(dto, author, updatedBook);
-        return mapper.toDto(updatedBook);
+
+        final var savedBook = repository.save(updatedBook);
+
+        return mapper.toDto(savedBook);
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public Long delete(Long id) {
+        final var book = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        final var findId = book.getId();
+
+        repository.deleteById(findId);
+
+        return id;
     }
 
     public List<BookDto> filter(BookFilter filter) {;
