@@ -49,4 +49,14 @@ public class Book {
                 ", count=" + count +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        return book.id == id;
+    }
 }

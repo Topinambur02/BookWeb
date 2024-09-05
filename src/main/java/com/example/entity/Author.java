@@ -32,4 +32,14 @@ public class Author {
 
     @OneToMany(mappedBy = "author")
     private List<Book> books = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Author author = (Author) o;
+
+        return id == author.id;
+    }
 }
