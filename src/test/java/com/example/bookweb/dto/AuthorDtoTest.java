@@ -10,17 +10,19 @@ import com.example.dto.AuthorDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AuthorDtoTest {
-    
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSerialization() throws Exception {
         final var json = Paths.get("src/test/resources/json/AuthorDtoTestSerialization.json").toFile();
 
-        final var dto = new AuthorDto();
-        dto.setId(1L);
-        dto.setName("test");
-        dto.setBookIds(List.of());
+        final var dto = AuthorDto
+                .builder()
+                .id(1L)
+                .name("test")
+                .bookIds(List.of())
+                .build();
 
         final var expected = mapper.readTree(json).toString();
 

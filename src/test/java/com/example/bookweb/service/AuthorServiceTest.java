@@ -24,23 +24,20 @@ import com.example.service.AuthorService;
 public class AuthorServiceTest {
 
     @Mock
+    private AuthorMapper mapper;
+    @InjectMocks
+    private AuthorService service;
+    @Mock
     private AuthorRepository repository;
-
     @Mock
     private BookRepository bookRepository;
 
-    @Mock
-    private AuthorMapper mapper;
-
-    @InjectMocks
-    private AuthorService service;
-    
     @Test
     void testGetAll() {
-        final var author1 = new Author();
-        final var author2 = new Author();
-        final var authorDto1 = new AuthorDto();
-        final var authorDto2 = new AuthorDto();
+        final var author1 = Author.builder().build();
+        final var author2 = Author.builder().build();
+        final var authorDto1 = AuthorDto.builder().build();
+        final var authorDto2 = AuthorDto.builder().build();
         final var authors = List.of(author1, author2);
         final var expected = List.of(authorDto1, authorDto2);
 
@@ -56,26 +53,27 @@ public class AuthorServiceTest {
     @Test
     void testCreate() {
         final var id = 1L;
-        final var expected = new AuthorDto();
+        final var expected = AuthorDto
+                .builder()
+                .id(id)
+                .build();
 
-        expected.setId(id);
+        final var mappedDto = AuthorDto
+                .builder()
+                .id(id)
+                .build();
 
-        final var author = new Author();
+        final var mappedAuthor = Author
+                .builder()
+                .id(id)
+                .build();
 
-        author.setId(id);
-
-        final var mappedDto = new AuthorDto();
-
-        mappedDto.setId(id);
-
-        final var mappedAuthor = new Author();
-
-        mappedAuthor.setId(id);
-
-        final var books = List.of(new Book(), new Book());
+        final var books = List.of(
+                Book.builder().build(),
+                Book.builder().build());
 
         when(bookRepository.findAllById(expected.getBookIds())).thenReturn(books);
-        when(repository.save(any(Author.class))).thenReturn(new Author());
+        when(repository.save(any(Author.class))).thenReturn(Author.builder().build());
         when(mapper.toAuthor(any(AuthorDto.class), any(List.class))).thenReturn(mappedAuthor);
         when(mapper.toDto(any(Author.class))).thenReturn(mappedDto);
 

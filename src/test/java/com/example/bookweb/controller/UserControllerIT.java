@@ -22,65 +22,72 @@ import com.example.dto.TokenResponse;
 import com.example.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = UserController.class)
 public class UserControllerIT {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
+        @MockBean
+        private UserService service;
 
-    @MockBean
-    private UserService service;
-    
-    @Test
-    @WithMockUser
-    public void testSignUp() throws Exception {
-        
-        final var dto = new SignUpDto();
+        @Test
+        @WithMockUser
+        public void testSignUp() throws Exception {
 
-        dto.setUsername("test");
-        dto.setEmail("test");
-        dto.setPassword("test");
+                final var dto = SignUpDto
+                                .builder()
+                                .username("test")
+                                .email("test")
+                                .password("test")
+                                .build();
 
-        when(service.signUp(dto)).thenReturn(dto);
+                when(service.signUp(dto)).thenReturn(dto);
 
-        mockMvc.perform(post("/users/signup").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
+                mockMvc.perform(post("/users/signup").contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(dto)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
 
-    }
+        }
 
-    @Test
-    @WithMockUser
-    public void testSignIn() throws Exception {
+        @Test
+        @WithMockUser
+        public void testSignIn() throws Exception {
 
-        final var dto = new SignInDto();
+                final var dto = SignInDto
+                                .builder()
+                                .username("test")
+                                .password("test")
+                                .build();
 
-        dto.setUsername("test");
-        dto.setPassword("test");
+                final var response = TokenResponse
+                                .builder()
+                                .build();
 
-        final var response = new TokenResponse();
+                when(service.signIn(dto)).thenReturn(response);
 
-        when(service.signIn(dto)).thenReturn(response);
+                mockMvc.perform(post("/users/signin").contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(dto)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(response)));
+        }
 
-        mockMvc.perform(post("/users/signin").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(response)));
-    }
+        @Test
+        @WithMockUser
+        public void testConfirmRegistration() throws Exception {
 
-    @Test
-    @WithMockUser
-    public void testConfirmRegistration() throws Exception {
+                final var generatedString = "test";
 
-        final var generatedString = "test";
+                final var response = ConfirmRegistrationResponse
+                                .builder()
+                                .build();
 
-        final var response = new ConfirmRegistrationResponse();
+                when(service.confirmRegistration(generatedString, null)).thenReturn(response);
 
-        when(service.confirmRegistration(generatedString, null)).thenReturn(response);
-
-        mockMvc.perform(post("/users/register/{generated-string}", generatedString))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(response)));
-    }
+                mockMvc.perform(post("/users/register/{generated-string}", generatedString))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(response)));
+        }
 
 }

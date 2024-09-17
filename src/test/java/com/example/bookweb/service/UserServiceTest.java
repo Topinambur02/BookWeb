@@ -3,6 +3,7 @@ package com.example.bookweb.service;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -30,25 +31,19 @@ import com.example.service.UserService;
 public class UserServiceTest {
 
     @Mock
-    private UserRepository repository;
-
-    @Mock
-    private Authentication authentication;
-
-    @Mock
     private UserMapper mapper;
-
-    @Mock
-    private EncryptionUtils encryptionUtils;
-
-    @Mock
-    private EmailService emailService;
-
-    @Mock
-    private AuthService authService;
-
     @InjectMocks
     private UserService service;
+    @Mock
+    private AuthService authService;
+    @Mock
+    private EmailService emailService;
+    @Mock
+    private UserRepository repository;
+    @Mock
+    private Authentication authentication;
+    @Mock
+    private EncryptionUtils encryptionUtils;
 
     @Test
     void testSignUpSuccess() {
@@ -56,47 +51,41 @@ public class UserServiceTest {
         final var email = "test";
         final var encryptedEmail = "test";
         final var encryptedConfirmationCode = "test";
-        final var dto = new SignUpDto();
-
-        dto.setUsername(username);
-        dto.setEmail(email);
-
-        final var user = new User();
-
-        user.setUsername(username);
-
-        final var savedUser = new User();
-
-        savedUser.setUsername(username);
-        savedUser.setEmail(encryptedEmail);
-        savedUser.setConfirmationCode(encryptedConfirmationCode);
-
-        final var expected = new SignUpDto();
-
-        expected.setUsername(username);
-        expected.setEmail(email);
+        final var dto = SignUpDto
+                .builder()
+                .username(username)
+                .email(email)
+                .build();
+        final var user = User
+                .builder()
+                .email(email)
+                .confirmationCode(encryptedConfirmationCode)
+                .build();
+        final var expected = SignUpDto
+                .builder()
+                .build();
 
         when(repository.existsByUsername(username)).thenReturn(false);
-        when(mapper.toUser(dto)).thenReturn(user);
         lenient().when(encryptionUtils.encrypt(email)).thenReturn(encryptedEmail);
         when(encryptionUtils.encrypt(any(String.class))).thenReturn(encryptedConfirmationCode);
-        when(repository.save(user)).thenReturn(savedUser);
-        when(mapper.toSignUpDto(savedUser)).thenReturn(expected);
+        doNothing().when(mapper).update(dto, user);
+        when(repository.save(any(User.class))).thenReturn(user);
+        when(mapper.toSignUpDto(user)).thenReturn(expected);
 
         final var actual = service.signUp(dto);
 
-        Assertions.assertThat(actual.getUsername()).isEqualTo(expected.getUsername());
-        Assertions.assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
+        Assertions.assertThat(actual).isEqualTo(expected);
         verify(emailService).sendMessage(eq(email), eq("Confirm registration"), any(String.class));
-        verify(repository).save(user);
+        verify(repository).save(any(User.class));
     }
 
     @Test
     void testSignUpAlreadyExists() {
         final var username = "test";
-        final var dto = new SignUpDto();
-
-        dto.setUsername(username);
+        final var dto = SignUpDto
+                .builder()
+                .username(username)
+                .build();
 
         final var expected = IllegalArgumentException.class;
 
@@ -112,9 +101,10 @@ public class UserServiceTest {
         final var generatedString = "test";
         final var encryptedConfirmationCode = "test";
         final var decryptedConfirmationCode = "test";
-        final var user = new User();
-
-        user.setConfirmationCode(encryptedConfirmationCode);
+        final var user = User
+                .builder()
+                .confirmationCode(encryptedConfirmationCode)
+                .build();
 
         final var expected = Role.USER;
 
@@ -136,9 +126,10 @@ public class UserServiceTest {
         final var generatedString = "test";
         final var expected = "test1";
         final var decryptedConfirmationCode = "test1";
-        final var user = new User();
-
-        user.setConfirmationCode(expected);
+        final var user = User
+                .builder()
+                .confirmationCode(expected)
+                .build();
 
         when(authentication.getPrincipal()).thenReturn(user);
         when(encryptionUtils.decrypt(expected)).thenReturn(decryptedConfirmationCode);

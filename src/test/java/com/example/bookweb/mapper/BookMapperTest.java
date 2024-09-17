@@ -11,30 +11,33 @@ import com.example.enums.Cover;
 import com.example.mapper.BookMapper;
 
 public class BookMapperTest {
-    
+
     private final BookMapper mapper = Mappers.getMapper(BookMapper.class);
 
     @Test
     public void testBookToDto() {
-        final var author = new Author();
-        author.setId(1L);
+        final var author = Author.builder().id(1L).build();
         final var authorId = author.getId();
 
-        final var book = new Book();
-        book.setId(1L);
-        book.setName("test");
-        book.setBrand("test");
-        book.setCount(1);
-        book.setCover(Cover.HARD);
-        book.setAuthor(author);
+        final var book = Book
+                .builder()
+                .id(1L)
+                .name("test")
+                .brand("test")
+                .count(1)
+                .cover(Cover.HARD)
+                .author(author)
+                .build();
 
-        final var expected = new BookDto();
-        expected.setId(1L);
-        expected.setName("test");
-        expected.setBrand("test");
-        expected.setCount(1);
-        expected.setCover(Cover.HARD);
-        expected.setAuthorId(authorId);
+        final var expected = BookDto
+                .builder()
+                .id(1L)
+                .name("test")
+                .brand("test")
+                .count(1)
+                .cover(Cover.HARD)
+                .authorId(authorId)
+                .build();
 
         final var actual = mapper.toDto(book);
 
@@ -43,25 +46,27 @@ public class BookMapperTest {
 
     @Test
     public void testDtoToBook() {
-        final var author = new Author();
-        author.setId(1L);
+        final var author = Author.builder().id(1L).build();
         final var authorId = author.getId();
 
-        final var dto = new BookDto();
-        dto.setId(1L);
-        dto.setName("test");
-        dto.setCover(Cover.HARD);
-        dto.setCount(1);
-        dto.setBrand("test");
-        dto.setAuthorId(authorId);
+        final var dto = BookDto
+                .builder()
+                .id(1L)
+                .name("test")
+                .cover(Cover.HARD)
+                .count(1)
+                .brand("test")
+                .authorId(authorId)
+                .build();
 
-        final var expected = new Book();
-        expected.setId(1L);
-        expected.setName("test");
-        expected.setBrand("test");
-        expected.setCount(1);
-        expected.setCover(Cover.HARD);
-        expected.setAuthor(author);
+        final var expected = Book
+                .builder()
+                .id(1L)
+                .name("test")
+                .brand("test")
+                .count(1)
+                .cover(Cover.HARD)
+                .author(author).build();
 
         final var actual = mapper.toBook(dto, author);
 
@@ -70,29 +75,29 @@ public class BookMapperTest {
 
     @Test
     public void testUpdate() {
-        final var author = new Author();
-        author.setId(1L);
+        final var author = Author.builder().id(1L).build();
         final var authorId = author.getId();
+        final var originalAuthor = Author.builder().id(3L).build();
 
-        final var dto = new BookDto();
-        dto.setId(1L);
-        dto.setName("test");
-        dto.setCover(Cover.HARD);
-        dto.setCount(1);
-        dto.setBrand("test");
-        dto.setAuthorId(authorId);
+        final var dto = BookDto
+                .builder()
+                .id(1L)
+                .name("test")
+                .cover(Cover.HARD)
+                .count(1)
+                .brand("test")
+                .authorId(authorId)
+                .build();
 
-        final var expected = new Book();
-        expected.setId(1L);
-        expected.setName("test1");
-        expected.setBrand("test1");
-        expected.setCount(2);
-        expected.setCover(Cover.SOFT);
-
-        final var originalAuthor = new Author();
-        originalAuthor.setId(3L);
-
-        expected.setAuthor(originalAuthor);
+        final var expected = Book
+                .builder()
+                .id(1L)
+                .name("test1")
+                .brand("test1")
+                .count(2)
+                .cover(Cover.SOFT)
+                .author(originalAuthor)
+                .build();
 
         final var expectedId = expected.getId();
         final var expectedAuthorId = expected.getAuthor().getId();

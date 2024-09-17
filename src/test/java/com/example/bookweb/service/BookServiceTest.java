@@ -30,36 +30,32 @@ import com.example.specification.BookSpecification;
 class BookServiceTest {
 
 	@Mock
+	private BookMapper mapper;
+	@InjectMocks
+	private BookService service;
+	@Mock
 	private BookRepository repository;
-
+	@Mock
+	private BookSpecification specification;
 	@Mock
 	private AuthorRepository authorRepository;
 
-	@Mock
-	private BookMapper mapper;
-
-	@Mock
-	private BookSpecification specification;
-
-	@InjectMocks
-	private BookService service;
-
 	@Test
 	void testGetAll() {
-		final var book1 = new Book(); 
-        final var book2 = new Book(); 
-        final var bookDto1 = new BookDto(); 
-        final var bookDto2 = new BookDto();
-        final var books = List.of(book1, book2);
-        final var expected = List.of(bookDto1, bookDto2);
+		final var book1 = Book.builder().build();
+		final var book2 = Book.builder().build();
+		final var bookDto1 = BookDto.builder().build();
+		final var bookDto2 = BookDto.builder().build();
+		final var books = List.of(book1, book2);
+		final var expected = List.of(bookDto1, bookDto2);
 
-        when(repository.findAll()).thenReturn(books);
-        when(mapper.toDto(book1)).thenReturn(bookDto1);
-        when(mapper.toDto(book2)).thenReturn(bookDto2);
+		when(repository.findAll()).thenReturn(books);
+		when(mapper.toDto(book1)).thenReturn(bookDto1);
+		when(mapper.toDto(book2)).thenReturn(bookDto2);
 
-        final var actual = service.getAll();
+		final var actual = service.getAll();
 
-        Assertions.assertThat(actual).isEqualTo(expected);
+		Assertions.assertThat(actual).isEqualTo(expected);
 	}
 
 	@Test
@@ -67,29 +63,30 @@ class BookServiceTest {
 		final var id = 1L;
 		final var authorId = 1L;
 
-		final var author = new Author();
-
-		author.setId(id);
-
-		final var mappedDto = new BookDto();
-
-		mappedDto.setId(id);
-		mappedDto.setAuthorId(authorId);
-
-		final var mappedBook = new Book();
-
-		mappedBook.setId(id);
-
-		final var expected = new BookDto();
-
-		expected.setId(id);
-		expected.setAuthorId(id);
+		final var author = Author
+				.builder()
+				.id(authorId)
+				.build();
+		final var mappedDto = BookDto
+				.builder()
+				.id(id)
+				.authorId(authorId)
+				.build();
+		final var mappedBook = Book
+				.builder()
+				.id(id)
+				.build();
+		final var expected = BookDto
+				.builder()
+				.id(id)
+				.authorId(authorId)
+				.build();
 
 		when(authorRepository.findById(id)).thenReturn(Optional.of(author));
-		when(repository.save(any(Book.class))).thenReturn(new Book());
+		when(repository.save(any(Book.class))).thenReturn(Book.builder().build());
 		when(mapper.toBook(any(BookDto.class), any(Author.class))).thenReturn(mappedBook);
 		when(mapper.toDto(any(Book.class))).thenReturn(mappedDto);
-		
+
 		final var actual = service.create(expected);
 
 		Assertions.assertThat(actual).isEqualTo(expected);
@@ -97,10 +94,11 @@ class BookServiceTest {
 
 	@Test
 	void testCreateAuthorNotFound() {
-		final var id = 1L;
-		final var dto = new BookDto();
-
-		dto.setAuthorId(id);
+		final var authorId = 1L;
+		final var dto = BookDto
+				.builder()
+				.authorId(authorId)
+				.build();
 
 		final var expected = ResourceNotFoundException.class;
 
@@ -111,18 +109,19 @@ class BookServiceTest {
 	void testUpdate() {
 		final var id = 1L;
 		final var authorId = 1L;
-		final var expected = new BookDto();
-
-		expected.setId(id);
-		expected.setAuthorId(authorId);
-
-		final var book = new Book();
-
-		book.setId(id);
-
-		final var author = new Author();
-
-		author.setId(authorId);
+		final var expected = BookDto
+				.builder()
+				.id(id)
+				.authorId(authorId)
+				.build();
+		final var book = Book
+				.builder()
+				.id(id)
+				.build();
+		final var author = Author
+				.builder()
+				.id(authorId)
+				.build();
 
 		when(repository.findById(id)).thenReturn(Optional.of(book));
 		when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
@@ -138,9 +137,10 @@ class BookServiceTest {
 	@Test
 	void testUpdateBookNotFound() {
 		final var id = 1L;
-		final var dto = new BookDto();
-
-		dto.setId(id);
+		final var dto = BookDto
+				.builder()
+				.id(id)
+				.build();
 
 		final var expected = ResourceNotFoundException.class;
 
@@ -151,10 +151,11 @@ class BookServiceTest {
 	void testUpdateAuthorNotFound() {
 		final var id = 1L;
 		final var authorId = 1L;
-		final var dto = new BookDto();
-
-		dto.setId(id);
-		dto.setAuthorId(authorId);
+		final var dto = BookDto
+				.builder()
+				.id(id)
+				.authorId(authorId)
+				.build();
 
 		final var expected = ResourceNotFoundException.class;
 
@@ -163,16 +164,15 @@ class BookServiceTest {
 
 	@Test
 	void testDelete() {
-		final var id = 1L;
-		final var book = new Book();
+		final var expected = 1L;
+		final var book = Book
+				.builder()
+				.id(expected)
+				.build();
 
-		book.setId(id);
+		when(repository.findById(expected)).thenReturn(Optional.of(book));
 
-		final var expected = id;
-
-		when(repository.findById(id)).thenReturn(Optional.of(book));
-
-		final var actual = service.delete(id);
+		final var actual = service.delete(expected);
 
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}
@@ -187,28 +187,27 @@ class BookServiceTest {
 
 	@Test
 	void testFilter() {
-		final var filter = new BookFilter();
-
-		filter.setName("Book 1");
-
-        final var book1 = new Book();
-
-		book1.setName("Book 1");
-
-        final var book2 = new Book();
-
-		book2.setName("Book 2");
-
-        final var bookDto1 = new BookDto();
+		final var filter = BookFilter
+				.builder()
+				.name("Book 1")
+				.build();
+		final var book1 = Book
+				.builder()
+				.name("Book 1")
+				.build();
+		final var bookDto1 = BookDto
+				.builder()
+				.name("Book 1")
+				.build();
 		final var books = List.of(book1);
 		final var expected = List.of(bookDto1);
 
 		Specification<Book> bookSpecification = Specification.where(null);
-        when(specification.filter(filter)).thenReturn(bookSpecification);
-        when(repository.findAll(any(Specification.class))).thenReturn(books);
-        when(mapper.toDto(book1)).thenReturn(bookDto1);
+		when(specification.filter(filter)).thenReturn(bookSpecification);
+		when(repository.findAll(any(Specification.class))).thenReturn(books);
+		when(mapper.toDto(book1)).thenReturn(bookDto1);
 
-        final var actual = service.filter(filter);
+		final var actual = service.filter(filter);
 
 		Assertions.assertThat(actual).isEqualTo(expected);
 	}

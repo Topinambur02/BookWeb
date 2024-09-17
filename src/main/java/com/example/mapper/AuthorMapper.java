@@ -30,9 +30,9 @@ public interface AuthorMapper {
                 .toList();
     }
 
+    @Mapping(target = "books", source = "books")
     @Mapping(target = "firstName", source = "dto.name", qualifiedByName = "firstName")
     @Mapping(target = "lastName", source = "dto.name", qualifiedByName = "lastName")
-    @Mapping(target = "books", source = "books")
     Author toAuthor(AuthorDto dto, List<Book> books);
 
     @Named("firstName")

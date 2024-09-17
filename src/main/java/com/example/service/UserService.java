@@ -25,17 +25,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private final UserRepository repository;
-
-    private final EmailService emailService;
-
     private final UserMapper mapper;
-
-    private final EncryptionUtils encryptionUtils;
-
-    @Autowired
     @Lazy
+    @Autowired
     private AuthService authService;
+    private final UserRepository repository;
+    private final EmailService emailService;
+    private final EncryptionUtils encryptionUtils;
 
     public SignUpDto signUp(SignUpDto dto) {
         final var username = dto.getUsername();
@@ -47,7 +43,6 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException(String.format("User with username %s already exists", username));
         }
 
-        final var user = mapper.toUser(dto);
         final var confirmationCode = UUID.randomUUID().toString();
         final var confirmationLink = String.format("http://localhost:8080/api/users/register/%s", confirmationCode);
         final var message = String.format("Hello, %s!\nYour activation link: %s", username, confirmationLink);
@@ -55,8 +50,13 @@ public class UserService implements UserDetailsService {
         final var encryptedEmail = encryptionUtils.encrypt(email);
         final var encryptedConfirmationCode = encryptionUtils.encrypt(confirmationCode);
 
-        user.setEmail(encryptedEmail);
-        user.setConfirmationCode(encryptedConfirmationCode);
+        final var user = User
+                .builder()
+                .email(encryptedEmail)
+                .confirmationCode(encryptedConfirmationCode)
+                .build();
+
+        mapper.update(dto, user);
 
         emailService.sendMessage(email, "Confirm registration", message);
 
@@ -70,11 +70,12 @@ public class UserService implements UserDetailsService {
         final var encryptedConfirmationCode = user.getConfirmationCode();
         final var confirmationCode = encryptionUtils.decrypt(encryptedConfirmationCode);
         final var isCorrect = generatedString.equals(confirmationCode);
-        final var response = new ConfirmRegistrationResponse();
 
         if (!isCorrect) {
-            response.setConfirmation(false);
-            return response;
+            return ConfirmRegistrationResponse
+                    .builder()
+                    .confirmation(false)
+                    .build();
         }
 
         user.setConfirmationCode(null);
@@ -82,9 +83,10 @@ public class UserService implements UserDetailsService {
 
         repository.save(user);
 
-        response.setConfirmation(true);
-
-        return response;
+        return ConfirmRegistrationResponse
+                .builder()
+                .confirmation(true)
+                .build();
     }
 
     public TokenResponse signIn(SignInDto dto) {

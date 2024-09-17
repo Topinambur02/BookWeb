@@ -12,65 +12,76 @@ import com.example.enums.Role;
 import com.example.mapper.UserMapper;
 
 public class UserMapperTest {
-    
-    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
-    @Test
-    public void testDtoToUser() {
+        private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
-        final var dto = new SignUpDto();
-        dto.setId(1L);
-        dto.setEmail("test@mail.ru");
-        dto.setUsername("test");
-        dto.setPassword("test");
+        @Test
+        public void testDtoToUser() {
 
-        final var expected = new User();
-        expected.setId(1L);
-        expected.setEmail("test@mail.ru");
-        expected.setUsername("test");
-        expected.setPassword("test");
-        expected.setRole(Role.GUEST);
+                final var dto = SignUpDto
+                                .builder()
+                                .id(1L)
+                                .email("test@mail.ru")
+                                .username("test")
+                                .password("test")
+                                .build();
 
-        final var actual = mapper.toUser(dto);
+                final var expected = User
+                                .builder()
+                                .id(1L)
+                                .email("test@mail.ru")
+                                .username("test")
+                                .password("test")
+                                .role(Role.GUEST)
+                                .build();
 
-        final var actualPassword = actual.getPassword();
-        final var expectedPassword = expected.getPassword();
-        final var isMatches = new BCryptPasswordEncoder().matches(expectedPassword, actualPassword);
+                final var actual = mapper.toUser(dto);
 
-        Assertions.assertThat(actual).isEqualTo(expected);
-        Assertions.assertThat(isMatches).isTrue();
-    }
+                final var actualPassword = actual.getPassword();
+                final var expectedPassword = expected.getPassword();
+                final var isMatches = new BCryptPasswordEncoder().matches(expectedPassword, actualPassword);
 
-    @Test
-    public void testUserToSignInDto() {
-        final var user = new User();
-        user.setUsername("test");
-        user.setPassword("test");
+                Assertions.assertThat(actual).isEqualTo(expected);
+                Assertions.assertThat(isMatches).isTrue();
+        }
 
-        final var expected = new SignInDto();
-        expected.setUsername("test");
-        expected.setPassword("test");
+        @Test
+        public void testUserToSignInDto() {
+                final var user = User
+                                .builder()
+                                .username("test")
+                                .password("test")
+                                .build();
 
-        final var actual = mapper.toSignInDto(user);
+                final var expected = SignInDto
+                                .builder()
+                                .username("test")
+                                .password("test")
+                                .build();
 
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
+                final var actual = mapper.toSignInDto(user);
 
-    @Test
-    public void testUserToSignUpDto() {
-        final var user = new User();
-        user.setUsername("test");
-        user.setEmail("test@mail.ru");
-        user.setPassword("test");
+                Assertions.assertThat(actual).isEqualTo(expected);
+        }
 
-        final var expected = new SignUpDto();
-        expected.setUsername("test");
-        expected.setEmail("test@mail.ru");
-        expected.setPassword("test");
+        @Test
+        public void testUserToSignUpDto() {
+                final var user = User
+                                .builder()
+                                .username("test")
+                                .email("test@mail.ru")
+                                .password("test")
+                                .build();
 
-        final var actual = mapper.toSignUpDto(user);
+                final var expected = SignUpDto
+                                .builder()
+                                .username("test")
+                                .email("test@mail.ru")
+                                .password("test")
+                                .build();
 
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
+                final var actual = mapper.toSignUpDto(user);
+
+                Assertions.assertThat(actual).isEqualTo(expected);
+        }
 }
-

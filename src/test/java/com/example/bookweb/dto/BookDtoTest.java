@@ -3,25 +3,31 @@ package com.example.bookweb.dto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import com.example.dto.BookDto;
 import com.example.enums.Cover;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BookDtoTest {
-    
+
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSerialization() throws Exception {
-        final var dto = new BookDto();
-        dto.setId(1L);
-        dto.setName("test");
-        dto.setBrand("test");
-        dto.setCover(Cover.SOFT);
-        dto.setAuthorId(1L);
-        dto.setCount(1);
+        final var json = Paths.get("src/test/resources/json/BookDtoTestSerialization.json").toFile();
 
-        final var expected = "{\"id\":1,\"name\":\"test\",\"brand\":\"test\",\"cover\":\"SOFT\",\"authorId\":1,\"count\":1}";
+        final var dto = BookDto
+                .builder()
+                .id(1L)
+                .name("test")
+                .brand("test")
+                .cover(Cover.SOFT)
+                .authorId(1L)
+                .count(1)
+                .build();
+
+        final var expected = mapper.readTree(json).toString();
 
         final var actual = mapper.writeValueAsString(dto);
 
@@ -30,7 +36,7 @@ public class BookDtoTest {
 
     @Test
     public void testDeserialization() throws Exception {
-        final var json = "{\"id\":1,\"name\":\"test\",\"brand\":\"test\",\"cover\":\"SOFT\",\"authorId\":1,\"count\":1}";
+        final var json = Paths.get("src/test/resources/json/BookDtoTestDeserialization.json").toFile();
         final var dto = mapper.readValue(json, BookDto.class);
 
         final var id = dto.getId();
