@@ -25,87 +25,94 @@ import com.example.filter.BookFilter;
 import com.example.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(controllers = BookController.class)
 @AutoConfigureMockMvc(addFilters = false)
+@WebMvcTest(controllers = BookController.class)
 public class BookControllerIT {
-    
-    @Autowired
-    private MockMvc mockMvc;
 
-    @MockBean
-    private BookService service;
+        @Autowired
+        private MockMvc mockMvc;
+        @MockBean
+        private BookService service;
 
-    @Test
-    @WithMockUser
-    public void testGetAll() throws Exception {
-        final var book1 = new BookDto();
-        final var book2 = new BookDto();
-        final var expected = List.of(book1, book2);
+        @Test
+        @WithMockUser
+        public void testGetAll() throws Exception {
+                final var book1 = BookDto
+                                .builder()
+                                .build();
+                final var book2 = BookDto
+                                .builder()
+                                .build();
+                final var expected = List.of(book1, book2);
 
-        when(service.getAll()).thenReturn(expected);
+                when(service.getAll()).thenReturn(expected);
 
-        mockMvc.perform(get("/books"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(expected)));
-    }
+                mockMvc.perform(get("/books"))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(expected)));
+        }
 
-    @Test
-    @WithMockUser
-    public void testCreate() throws Exception {
-        final var dto = new BookDto();
+        @Test
+        @WithMockUser
+        public void testCreate() throws Exception {
+                final var dto = BookDto
+                                .builder()
+                                .id(1L)
+                                .name("test")
+                                .build();
 
-        dto.setId(1L);
-        dto.setName("test");
+                when(service.create(dto)).thenReturn(dto);
 
-        when(service.create(dto)).thenReturn(dto);
+                mockMvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(dto)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
+        }
 
-        mockMvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
-    }
+        @Test
+        @WithMockUser
+        public void testDelete() throws Exception {
+                Long bookId = 1L;
 
-    @Test
-    @WithMockUser
-    public void testDelete() throws Exception {
-        Long bookId = 1L;
+                when(service.delete(bookId)).thenReturn(bookId);
 
-        when(service.delete(bookId)).thenReturn(bookId);
+                mockMvc.perform(delete("/books/{id}", bookId))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$").value(bookId));
+        }
 
-        mockMvc.perform(delete("/books/{id}", bookId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(bookId));
-    }
+        @Test
+        @WithMockUser
+        public void testFilter() throws Exception {
+                final var filter = BookFilter.builder().build();
+                final var book1 = BookDto.builder().build();
+                final var book2 = BookDto.builder().build();
+                final var expected = List.of(book1, book2);
 
+                when(service.filter(filter)).thenReturn(expected);
 
-    @Test
-    @WithMockUser
-    public void testFilter() throws Exception {
-        final var filter = new BookFilter();
-        final var book1 = new BookDto();
-        final var book2 = new BookDto();
-        final var expected = List.of(book1, book2);
+                mockMvc.perform(get("/books/filter").contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(filter)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(expected)));
+        }
 
-        when(service.filter(filter)).thenReturn(expected);
+        @Test
+        @WithMockUser
+        public void testUpdate() throws Exception {
+                final var bookId = 1L;
+                final var dto = BookDto
+                                .builder()
+                                .id(bookId)
+                                .name("test")
+                                .build();
 
-        mockMvc.perform(get("/books/filter").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(filter)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(expected)));
-    }
+                when(service.create(dto)).thenReturn(dto);
 
-    @Test
-    @WithMockUser
-    public void testUpdate() throws Exception {
-        final var bookId = 1L;
-        final var dto = new BookDto();
-
-        dto.setId(bookId);
-        dto.setName("test");
-
-        when(service.create(dto)).thenReturn(dto);
-
-        mockMvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(dto)))
-                .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
-    }
+                mockMvc.perform(post("/books").contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(dto)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
+        }
 
 }

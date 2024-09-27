@@ -16,7 +16,7 @@ public class UserRepositoryIT {
 
     @Test
     public void testSave() {
-        final var expected = new User();
+        final var expected = User.builder().build();
 
         final var actual = repository.save(expected);
 
@@ -26,26 +26,25 @@ public class UserRepositoryIT {
     @Test
     public void testExistsByUsername() {
         final var username = "test";
-
-        final var user = new User();
-        user.setUsername(username);
-
-        final var expected = true;
+        final var user = User
+                .builder()
+                .username(username)
+                .build();
 
         repository.save(user);
 
-        final var actual = repository
-                .existsByUsername(username);
+        final var actual = repository.existsByUsername(username);
 
-        Assertions.assertThat(actual).isEqualTo(expected);
+        Assertions.assertThat(actual).isTrue();
     }
 
     @Test
     public void testFindByUsername() {
         final var username = "test";
-        final var expected = new User();
-
-        expected.setUsername(username);
+        final var expected = User
+                .builder()
+                .username("test")
+                .build();
 
         repository.save(expected);
 

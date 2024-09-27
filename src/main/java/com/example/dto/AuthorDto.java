@@ -1,17 +1,23 @@
 package com.example.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class AuthorDto {
+    
     @Schema(description = "ID автора", example = "1")
     private Long id;
 
@@ -19,5 +25,5 @@ public class AuthorDto {
     private String name;
 
     @Schema(description = "ID книги", example = "1, 2")
-    private List<Long> bookIds = new ArrayList<>();
+    private List<Long> bookIds;
 }

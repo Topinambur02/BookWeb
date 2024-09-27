@@ -20,31 +20,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-@Tag(name = "Методы для авторов", description = "Методы для получения списка авторов и создания автора") 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("authors")
+@Tag(name = "Методы для авторов", description = "Методы для получения списка авторов и создания автора")
 public class AuthorController {
 
     private final AuthorService service;
 
-    @Operation(summary = "Получить список всех авторов", description = "Возвращает список DTO всех авторов")
+    @GetMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Авторы получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
     })
-    @GetMapping
+    @Operation(summary = "Получить список всех авторов", description = "Возвращает список DTO всех авторов")
     public List<AuthorDto> getAll() {
         return service.getAll();
     }
 
-    @Operation(summary = "Создать нового автора", description = "Получает DTO автора и создает нового автора")
+    @PostMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Автор успешно создан", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
     })
-    @PostMapping
+    @Operation(summary = "Создать нового автора", description = "Получает DTO автора и создает нового автора")
     public AuthorDto create(@RequestBody AuthorDto dto) {
         return service.create(dto);
     }
-    
+
 }

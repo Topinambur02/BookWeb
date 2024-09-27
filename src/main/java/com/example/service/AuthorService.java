@@ -15,11 +15,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorService {
 
-    private final AuthorRepository repository;
-    
-    private final BookRepository bookRepository;
-
     private final AuthorMapper mapper;
+    private final AuthorRepository repository;
+    private final BookRepository bookRepository;
 
     public List<AuthorDto> getAll() {
         return repository

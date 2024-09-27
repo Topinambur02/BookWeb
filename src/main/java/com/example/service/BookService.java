@@ -18,10 +18,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 
-    private final BookRepository repository;
-    private final AuthorRepository authorRepository;
     private final BookMapper mapper;
+    private final BookRepository repository;
     private final BookSpecification specification;
+    private final AuthorRepository authorRepository;
 
     public List<BookDto> getAll() {
         return repository
@@ -35,7 +35,10 @@ public class BookService {
         final var id = dto.getAuthorId();
 
         final var author = authorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+                .orElseThrow(() -> ResourceNotFoundException
+                        .builder()
+                        .message("Author not found")
+                        .build());
 
         final var book = mapper.toBook(dto, author);
         final var savedBook = repository.save(book);
@@ -48,10 +51,16 @@ public class BookService {
         final var authorId = dto.getAuthorId();
 
         final var updatedBook = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+                .orElseThrow(() -> ResourceNotFoundException
+                        .builder()
+                        .message("Book not found")
+                        .build());
 
         final var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
+                .orElseThrow(() -> ResourceNotFoundException
+                        .builder()
+                        .message("Author not found")
+                        .build());
 
         mapper.update(dto, author, updatedBook);
 
@@ -62,7 +71,10 @@ public class BookService {
 
     public Long delete(Long id) {
         final var book = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+                .orElseThrow(() -> ResourceNotFoundException
+                        .builder()
+                        .message("Book not found")
+                        .build());
 
         final var findId = book.getId();
 
@@ -71,7 +83,8 @@ public class BookService {
         return id;
     }
 
-    public List<BookDto> filter(BookFilter filter) {;
+    public List<BookDto> filter(BookFilter filter) {
+        ;
         final var bookSpecification = specification.filter(filter);
 
         return repository

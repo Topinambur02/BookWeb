@@ -1,20 +1,20 @@
 package com.example.encryption;
 
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+
+import com.example.wrapper.SimpleStringPBEConfigWrapper;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 
+@Data
 @Component
 @ConfigurationProperties(prefix = "encrypt")
-@Data
 public class EncryptionUtils {
 
     private String secretKey;
-
     private PooledPBEStringEncryptor encryptor;
 
     public EncryptionUtils() {
@@ -23,10 +23,11 @@ public class EncryptionUtils {
 
     @PostConstruct
     public void init() {
-        final var config = new SimpleStringPBEConfig();
-
-        config.setPassword(secretKey);
-        config.setPoolSize("1");
+        final var config = SimpleStringPBEConfigWrapper
+                .builder()
+                .password(secretKey)
+                .poolSize("1")
+                .build();
 
         encryptor.setConfig(config);
     }

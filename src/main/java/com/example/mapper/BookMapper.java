@@ -10,14 +10,15 @@ import com.example.entity.Book;
 
 @Mapper
 public interface BookMapper {
-    @Mapping(target = "author", source = "author")
+
     @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "author", source = "author")
     Book toBook(BookDto dto, Author author);
 
     @Mapping(target = "authorId", source = "author.id")
     BookDto toDto(Book book);
 
-    @Mapping(target = "author", source = "author")
     @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "author", source = "author")
     void update(BookDto dto, Author author, @MappingTarget Book book);
 }

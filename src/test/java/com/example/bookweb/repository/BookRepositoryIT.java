@@ -17,7 +17,6 @@ public class BookRepositoryIT {
 
     @Autowired
     private BookRepository repository;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -28,8 +27,8 @@ public class BookRepositoryIT {
 
     @Test
     public void testFindAll() {
-        final var book1 = new Book();
-        final var book2 = new Book();
+        final var book1 = Book.builder().build();
+        final var book2 = Book.builder().build();
         final var expected = List.of(book1, book2);
 
         repository.save(book1);
@@ -42,21 +41,12 @@ public class BookRepositoryIT {
 
     @Test
     public void testFindAllById() {
-        final var book1 = new Book();
-
-        book1.setId(1L);
-
-        final var book2 = new Book();
-
-        book2.setId(2L);
-
-        final var book3 = new Book();
-
-        book3.setId(3L);
-
+        final var book1 = Book.builder().id(1L).build();
+        final var book2 = Book.builder().id(2L).build();
+        final var book3 = Book.builder().id(3L).build();
         final var ids = List.of(1L, 2L);
         final var expected = List.of(book1, book2);
-        
+
         repository.save(book1);
         repository.save(book2);
         repository.save(book3);
@@ -68,7 +58,7 @@ public class BookRepositoryIT {
 
     @Test
     public void testSave() {
-        final var expected = new Book();
+        final var expected = Book.builder().build();
 
         final var actual = repository.save(expected);
 
@@ -78,9 +68,10 @@ public class BookRepositoryIT {
     @Test
     public void testFindById() {
         final var id = 1L;
-        final var expected = new Book();
-
-        expected.setId(id);
+        final var expected = Book
+                .builder()
+                .id(id)
+                .build();
 
         repository.save(expected);
 
@@ -94,9 +85,10 @@ public class BookRepositoryIT {
     @Test
     public void testDeleteById() {
         final var id = 1L;
-        final var book = new Book();
-
-        book.setId(id);
+        final var book = Book
+                .builder()
+                .id(id)
+                .build();
 
         repository.save(book);
         repository.deleteById(id);

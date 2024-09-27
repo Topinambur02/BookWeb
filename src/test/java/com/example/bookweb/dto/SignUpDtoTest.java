@@ -3,22 +3,28 @@ package com.example.bookweb.dto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import com.example.dto.SignUpDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SignUpDtoTest {
-    
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSerialization() throws Exception {
-        final var dto = new SignUpDto();
-        dto.setId(1L);
-        dto.setUsername("test");
-        dto.setPassword("test");
-        dto.setEmail("test");
+        final var json = Paths.get("src/test/resources/json/SignUpDtoTestSerialization.json").toFile();
 
-        final var expected = "{\"id\":1,\"username\":\"test\",\"email\":\"test\",\"password\":\"test\"}";
+        final var dto = SignUpDto
+                .builder()
+                .id(1L)
+                .username("test")
+                .password("test")
+                .email("test")
+                .build();
+
+        final var expected = mapper.readTree(json).toString();
 
         final var actual = mapper.writeValueAsString(dto);
 
@@ -27,7 +33,7 @@ public class SignUpDtoTest {
 
     @Test
     public void testDeserialization() throws Exception {
-        final var json = "{\"id\":1,\"username\":\"test\",\"password\":\"test\",\"email\":\"test\"}";
+        final var json = Paths.get("src/test/resources/json/SignUpDtoTestDeserialization.json").toFile();
         final var dto = mapper.readValue(json, SignUpDto.class);
 
         final var id = dto.getId();

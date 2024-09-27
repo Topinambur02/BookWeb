@@ -16,10 +16,9 @@ import com.example.repository.AuthorRepository;
 public class AuthorRepositoryIT {
 
     @Autowired
-    private AuthorRepository repository;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private AuthorRepository repository;
 
     @BeforeEach
     public void setUp() {
@@ -29,8 +28,8 @@ public class AuthorRepositoryIT {
 
     @Test
     public void testFindAll() {
-        final var author1 = new Author();
-        final var author2 = new Author();
+        final var author1 = Author.builder().build();
+        final var author2 = Author.builder().build();
         final var expected = List.of(author1, author2);
 
         repository.save(author1);
@@ -43,7 +42,7 @@ public class AuthorRepositoryIT {
 
     @Test
     public void testSave() {
-        final var expected = new Author();
+        final var expected = Author.builder().build();
 
         final var actual = repository.save(expected);
 
@@ -53,9 +52,10 @@ public class AuthorRepositoryIT {
     @Test
     public void testFindById() {
         final var id = 1L;
-        final var expected = new Author();
-
-        expected.setId(id);
+        final var expected = Author
+                .builder()
+                .id(id)
+                .build();
 
         repository.save(expected);
 

@@ -20,22 +20,21 @@ import com.example.service.AuthService;
 public class AuthServiceTest {
 
     @Mock
-    private AuthenticationManager manager;
-
-    @Mock
     private JwtUtils jwtUtils;
-
     @InjectMocks
     private AuthService service;
+    @Mock
+    private AuthenticationManager manager;
 
     @Test
     void testSignIn() {
         final var username = "testUser";
         final var password = "testPass";
-        final var dto = new SignInDto();
-
-        dto.setUsername(username);
-        dto.setPassword(password);
+        final var dto = SignInDto
+                .builder()
+                .username(username)
+                .password(password)
+                .build();
 
         final var authentication = new UsernamePasswordAuthenticationToken(username, password);
         final var expected = "testJwtToken";
@@ -43,9 +42,7 @@ public class AuthServiceTest {
         when(manager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(jwtUtils.generateJwtToken(authentication)).thenReturn(expected);
 
-        final var actual = service
-                .signIn(dto)
-                .getToken();
+        final var actual = service.signIn(dto).getToken();
 
         Assertions.assertThat(actual).isEqualTo(expected);
     }

@@ -14,26 +14,27 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.example.service.EmailService;
+import com.example.wrapper.SimpleMailMessageWrapper;
 
 @ExtendWith(MockitoExtension.class)
 public class EmailServiceTest {
 
+    @InjectMocks
+    private EmailService service;
     @Mock
     private JavaMailSender javaMailSender;
 
-    @InjectMocks
-    private EmailService service;
-    
     @Test
     void testSendEmail() {
         final var to = "test@example.com";
         final var subject = "Test Subject";
         final var text = "Test message";
-        final var expectedMessage = new SimpleMailMessage();
-
-        expectedMessage.setTo(to);
-        expectedMessage.setSubject(subject);
-        expectedMessage.setText(text);
+        final var expectedMessage = SimpleMailMessageWrapper
+                .builder()
+                .to(to)
+                .subject(subject)
+                .text(text)
+                .build();
 
         service.sendMessage(to, subject, text);
 

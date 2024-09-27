@@ -15,19 +15,19 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.Setter;
 
-@Component
 @Getter
 @Setter
+@Component
 @ConfigurationProperties(prefix = "jwt")
 public class JwtUtils {
 
     private String secret;
-
     private int expirationMs;
 
     public String generateJwtToken(Authentication auth) {
         final var userDetails = (UserDetails) auth.getPrincipal();
-        final var date = new Date((new Date()).getTime() + expirationMs);
+        final var fastTime = new Date().getTime() + expirationMs;
+        final var date = new Date(fastTime);
 
         return Jwts
                 .builder()

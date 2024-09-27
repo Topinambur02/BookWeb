@@ -23,29 +23,29 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@ControllerAdvice
 @ResponseBody
+@ControllerAdvice
 public class GlobalExceptionHandler implements AuthenticationEntryPoint {
 
     // 400: Bad request
-    @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ErrorResponse handleBadRequestException(HttpMessageNotReadableException exception,
             HttpServletRequest request, HttpServletResponse response) {
         return handleException(request, response, exception);
     }
 
     // 404: Not found
-    @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
     public ErrorResponse handleNotFoundException(NoHandlerFoundException exception, HttpServletRequest request,
             HttpServletResponse response) {
         return handleException(request, response, exception);
     }
 
     // 405: Method not allowed
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ErrorResponse handleMethodNotAllowedException(HttpRequestMethodNotSupportedException exception,
             HttpServletRequest request, HttpServletResponse response) {
         return handleException(request, response, exception);
@@ -63,10 +63,8 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authenticationException) throws IOException, ServletException {
-        final var objectMapper = new ObjectMapper();
         final var errorResponse = handleException(request, response, authenticationException);
-
-        final var jsonResponse = objectMapper.writeValueAsString(errorResponse);
+        final var jsonResponse = new ObjectMapper().writeValueAsString(errorResponse);
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
@@ -86,11 +84,23 @@ public class GlobalExceptionHandler implements AuthenticationEntryPoint {
         final var isAuthenticated = user != null && user.isAuthenticated();
 
         if (!isAuthenticated) {
-            return new ErrorResponse(message, formattedDate, url, null);
+            return ErrorResponse
+                    .builder()
+                    .message(message)
+                    .date(formattedDate)
+                    .url(url)
+                    .user(null)
+                    .build();
         }
 
         final var username = user.getName();
 
-        return new ErrorResponse(message, formattedDate, url, username);
+        return ErrorResponse
+                .builder()
+                .message(message)
+                .date(formattedDate)
+                .url(url)
+                .user(username)
+                .build();
     }
 }

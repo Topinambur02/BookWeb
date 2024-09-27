@@ -3,17 +3,28 @@ package com.example.bookweb.dto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
+
 import com.example.dto.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ErrorResponseTest {
-    
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
     public void testSerialization() throws Exception {
-        final var response = new ErrorResponse("test", "30-08-2024 12:22:44.213", "/api/boo", "login");
-        final var expected = "{\"message\":\"test\",\"date\":\"30-08-2024 12:22:44.213\",\"url\":\"/api/boo\",\"user\":\"login\"}";
+        final var json = Paths.get("src/test/resources/json/ErrorResponseTestSerialization.json").toFile();
+
+        final var response = ErrorResponse
+                .builder()
+                .message("test")
+                .date("30-08-2024 12:22:44.213")
+                .url("/api/boo")
+                .user("login")
+                .build();
+                
+        final var expected = mapper.readTree(json).toString();
 
         final var actual = mapper.writeValueAsString(response);
 
@@ -22,7 +33,7 @@ public class ErrorResponseTest {
 
     @Test
     public void testDeserialization() throws Exception {
-        final var json = "{\"message\":\"test\",\"date\":\"30-08-2024 12:22:44.213\",\"url\":\"/api/boo\",\"user\":\"login\"}";
+        final var json = Paths.get("src/test/resources/json/ErrorResponseTestDeserialization.json").toFile();
         final var response = mapper.readValue(json, ErrorResponse.class);
 
         final var message = response.getMessage();
