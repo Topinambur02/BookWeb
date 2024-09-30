@@ -12,7 +12,7 @@ public class JavaMailSenderImplWrapper extends JavaMailSenderImpl {
         private int port;
         private String username;
         private String password;
-        private Properties properties;
+        private Properties properties = new Properties();
 
         public Builder host(String host) {
             this.host = host;
