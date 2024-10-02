@@ -29,19 +29,19 @@ public class AuthorController {
     private final AuthorService service;
 
     @GetMapping
+    @Operation(summary = "Получить список всех авторов", description = "Возвращает список DTO всех авторов")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Авторы получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
     })
-    @Operation(summary = "Получить список всех авторов", description = "Возвращает список DTO всех авторов")
     public List<AuthorDto> getAll() {
         return service.getAll();
     }
 
     @PostMapping
+    @Operation(summary = "Создать нового автора", description = "Получает DTO автора и создает нового автора")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Автор успешно создан", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
     })
-    @Operation(summary = "Создать нового автора", description = "Получает DTO автора и создает нового автора")
     public AuthorDto create(@RequestBody AuthorDto dto) {
         return service.create(dto);
     }

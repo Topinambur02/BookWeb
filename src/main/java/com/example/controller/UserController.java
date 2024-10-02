@@ -32,28 +32,28 @@ public class UserController {
     private final UserService service;
 
     @PostMapping("/signup")
+    @Operation(summary = "Регистрация пользователя", description = "Получает DTO пользователя и создает нового пользователя")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Пользователь создан", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SignUpDto.class))),
     })
-    @Operation(summary = "Регистрация пользователя", description = "Получает DTO пользователя и создает нового пользователя")
     public SignUpDto signUp(@RequestBody SignUpDto dto) {
         return service.signUp(dto);
     }
 
     @PostMapping("/signin")
+    @Operation(summary = "Авторизация пользователя", description = "Получает DTO пользователя и авторизует пользователя")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Пользователь авторизован", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenResponse.class))),
     })
-    @Operation(summary = "Авторизация пользователя", description = "Получает DTO пользователя и авторизует пользователя")
     public TokenResponse signIn(@RequestBody SignInDto dto) {
         return service.signIn(dto);
     }
     
     @PostMapping("/register/{generated-string}")
+    @Operation(summary = "Подтверждение регистрации пользователя", description = "Получает DTO пользователя и подтверждает регистрацию пользователя")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Пользователь подтвержден", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ConfirmRegistrationResponse.class))),
     })
-    @Operation(summary = "Подтверждение регистрации пользователя", description = "Получает DTO пользователя и подтверждает регистрацию пользователя")
     public ConfirmRegistrationResponse confirmRegistration(@PathVariable("generated-string") @Parameter(description = "Сгенерированный код подтверждения", example = "akjcsjhdsd21sdjggcsh") String generatedString, Authentication authentication) {
         return service.confirmRegistration(generatedString, authentication);
     }

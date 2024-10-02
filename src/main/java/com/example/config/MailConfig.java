@@ -19,15 +19,14 @@ public class MailConfig {
     private String username;
     private String password;
     private static final Map<String, String> PROPERTIES = Map.of(
-        "mail.transport.protocol", "smtp",
-        "mail.smtp.auth", "true",
-        "mail.smtp.starttls.enable", "true"
-    );
+            "mail.transport.protocol", "smtp",
+            "mail.smtp.auth", "true",
+            "mail.smtp.starttls.enable", "true");
 
     @Bean
     JavaMailSender javaMailSender() {
 
-        final var mailSender = JavaMailSenderImplWrapper
+        return JavaMailSenderImplWrapper
                 .builder()
                 .port(587)
                 .host("smtp.gmail.com")
@@ -35,8 +34,6 @@ public class MailConfig {
                 .password(password)
                 .properties(PROPERTIES)
                 .build();
-
-        return mailSender;
     }
 
 }

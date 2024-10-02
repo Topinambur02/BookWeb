@@ -23,4 +23,5 @@ public class SignUpDto {
 
     @Schema(description = "Пароль пользователя", example = "password")
     private String password;
+    
 }

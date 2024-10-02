@@ -26,4 +26,5 @@ public class AuthorDto {
 
     @Schema(description = "ID книги", example = "1, 2")
     private List<Long> bookIds;
+    
 }
