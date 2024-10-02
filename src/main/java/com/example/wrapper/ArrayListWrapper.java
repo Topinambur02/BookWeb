@@ -8,6 +8,7 @@ public class ArrayListWrapper {
 
     public static class Builder {
 
+        @SuppressWarnings("unused")
         private List<Predicate> predicates;
 
         public Builder predicates(List<Predicate> predicates) {
