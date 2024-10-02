@@ -21,65 +21,66 @@ import com.example.repository.BookRepository;
 import com.example.service.AuthorService;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorServiceTest {
+class AuthorServiceTest {
 
-    @Mock
-    private AuthorMapper mapper;
-    @InjectMocks
-    private AuthorService service;
-    @Mock
-    private AuthorRepository repository;
-    @Mock
-    private BookRepository bookRepository;
+        @Mock
+        private AuthorMapper mapper;
+        @InjectMocks
+        private AuthorService service;
+        @Mock
+        private AuthorRepository repository;
+        @Mock
+        private BookRepository bookRepository;
 
-    @Test
-    void testGetAll() {
-        final var author1 = Author.builder().build();
-        final var author2 = Author.builder().build();
-        final var authorDto1 = AuthorDto.builder().build();
-        final var authorDto2 = AuthorDto.builder().build();
-        final var authors = List.of(author1, author2);
-        final var expected = List.of(authorDto1, authorDto2);
+        @Test
+        void testGetAll() {
+                final var author1 = Author.builder().build();
+                final var author2 = Author.builder().build();
+                final var authorDto1 = AuthorDto.builder().build();
+                final var authorDto2 = AuthorDto.builder().build();
+                final var authors = List.of(author1, author2);
+                final var expected = List.of(authorDto1, authorDto2);
 
-        when(repository.findAll()).thenReturn(authors);
-        when(mapper.toDto(author1)).thenReturn(authorDto1);
-        when(mapper.toDto(author2)).thenReturn(authorDto2);
+                when(repository.findAll()).thenReturn(authors);
+                when(mapper.toDto(author1)).thenReturn(authorDto1);
+                when(mapper.toDto(author2)).thenReturn(authorDto2);
 
-        final var actual = service.getAll();
+                final var actual = service.getAll();
 
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
+                Assertions.assertThat(actual).isEqualTo(expected);
+        }
 
-    @Test
-    void testCreate() {
-        final var id = 1L;
-        final var expected = AuthorDto
-                .builder()
-                .id(id)
-                .build();
+        @SuppressWarnings("unchecked")
+        @Test
+        void testCreate() {
+                final var id = 1L;
+                final var expected = AuthorDto
+                                .builder()
+                                .id(id)
+                                .build();
 
-        final var mappedDto = AuthorDto
-                .builder()
-                .id(id)
-                .build();
+                final var mappedDto = AuthorDto
+                                .builder()
+                                .id(id)
+                                .build();
 
-        final var mappedAuthor = Author
-                .builder()
-                .id(id)
-                .build();
+                final var mappedAuthor = Author
+                                .builder()
+                                .id(id)
+                                .build();
 
-        final var books = List.of(
-                Book.builder().build(),
-                Book.builder().build());
+                final var books = List.of(
+                                Book.builder().build(),
+                                Book.builder().build());
 
-        when(bookRepository.findAllById(expected.getBookIds())).thenReturn(books);
-        when(repository.save(any(Author.class))).thenReturn(Author.builder().build());
-        when(mapper.toAuthor(any(AuthorDto.class), any(List.class))).thenReturn(mappedAuthor);
-        when(mapper.toDto(any(Author.class))).thenReturn(mappedDto);
+                when(bookRepository.findAllById(expected.getBookIds())).thenReturn(books);
+                when(repository.save(any(Author.class))).thenReturn(Author.builder().build());
+                when(mapper.toAuthor(any(AuthorDto.class), any(List.class))).thenReturn(mappedAuthor);
+                when(mapper.toDto(any(Author.class))).thenReturn(mappedDto);
 
-        final var actual = service.create(expected);
+                final var actual = service.create(expected);
 
-        Assertions.assertThat(actual).isEqualTo(expected);
-    }
+                Assertions.assertThat(actual).isEqualTo(expected);
+        }
 
 }

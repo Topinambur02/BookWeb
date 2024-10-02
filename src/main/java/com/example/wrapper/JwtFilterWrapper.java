@@ -6,6 +6,7 @@ import com.example.service.UserService;
 
 public class JwtFilterWrapper extends JwtFilter {
     
+    @SuppressWarnings("unused")
     public static class Builder {
 
         private JwtUtils utils;

@@ -185,6 +185,7 @@ class BookServiceTest {
 		Assertions.assertThatThrownBy(() -> service.delete(id)).isInstanceOf(expected);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	void testFilter() {
 		final var filter = BookFilter
