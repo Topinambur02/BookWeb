@@ -33,4 +33,5 @@ public class BookDto {
 
     @Schema(description = "ID автора", example = "1")
     private Long authorId;
+    
 }

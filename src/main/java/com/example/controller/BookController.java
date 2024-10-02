@@ -33,46 +33,46 @@ public class BookController {
     private final BookService service;
 
     @PostMapping
+    @Operation(summary = "Создать новую книгу", description = "Получает DTO книги и создает новую книгу")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Книга успешно создана", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))),
     })
-    @Operation(summary = "Создать новую книгу", description = "Получает DTO книги и создает новую книгу")
     public BookDto create(@RequestBody BookDto dto) {
         return service.create(dto);
     }
 
     @GetMapping
+    @Operation(summary = "Получить список всех книг", description = "Возвращает список DTO всех книг")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Книги получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))),
     })
-    @Operation(summary = "Получить список всех книг", description = "Возвращает список DTO всех книг")
     public List<BookDto> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/filter")
+    @Operation(summary = "Получить список книг по фильтру", description = "Возвращает список DTO книг по фильтру")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Книги получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))),
     })
-    @Operation(summary = "Получить список книг по фильтру", description = "Возвращает список DTO книг по фильтру")
     public List<BookDto> filter(@RequestBody BookFilter filter) {
         return service.filter(filter);
     }
 
     @PutMapping
+    @Operation(summary = "Изменить книгу", description = "Получает DTO книги и обновляет книгу")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Книга обновлена", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))),
     })
-    @Operation(summary = "Изменить книгу", description = "Получает DTO книги и обновляет книгу")
     public BookDto update(@RequestBody BookDto dto) {
         return service.update(dto);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить книгу", description = "Удаляет книгу по ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Книга удалена", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BookDto.class))),
     })
-    @Operation(summary = "Удалить книгу", description = "Удаляет книгу по ID")
     public Long delete(@PathVariable @Parameter(description = "ID книги", example = "1") Long id) {
         return service.delete(id);
     }

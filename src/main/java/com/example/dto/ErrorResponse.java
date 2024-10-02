@@ -23,4 +23,5 @@ public class ErrorResponse {
 
     @Schema(description = "Сообщение об ошибке", example = "No endpoint GET /api/boo.")
     private String message;
+    
 }
