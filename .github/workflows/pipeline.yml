@@ -1,0 +1,54 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build without tests
+        run: mvn package -DskipTests -B | grep -v -E "Downloading from central|Downloaded from central|Downloading from spring-milestones"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Unit Tests
+        run: mvn verify -B | grep -v -E "Downloading from central|Downloaded from central|Downloading from spring-milestones:"
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Integration Tests
+        run: mvn verify -Pintegration-tests -B | grep -v -E "Downloading from central|Downloaded from central|Downloading from spring-milestones:"
