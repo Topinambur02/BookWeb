@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/users/signup", "/users/signin", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .anonymous(anonymous -> anonymous.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(exceptionHandler))
                 .formLogin(login -> login
