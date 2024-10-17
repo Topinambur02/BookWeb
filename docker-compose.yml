@@ -25,3 +25,13 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
