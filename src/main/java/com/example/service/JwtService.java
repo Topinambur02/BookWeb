@@ -1,34 +1,32 @@
-package com.example.filter;
+package com.example.service;
 
 import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.security.JwtUtils;
-import com.example.service.UserService;
+import com.example.utils.JwtUtils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+@Service
+@RequiredArgsConstructor
+public class JwtService extends OncePerRequestFilter {
 
-    private JwtUtils utils;
-    private UserService userService;
+    private final JwtUtils utils;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
         final var authorizationHeader = request.getHeader("Authorization");
         final var prefix = "Bearer ";
         final var prefixLength = prefix.length();
@@ -43,10 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
         final var isValidate = utils.validateJwtToken(jwt);
 
         if (isValidate) {
-
             final var username = utils.getUserName(jwt);
-            final var user = userService.loadUserByUsername(username);
-
+            final var user = userDetailsService.loadUserByUsername(username);
             final var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             final var details = new WebAuthenticationDetailsSource().buildDetails(request);
 

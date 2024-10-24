@@ -5,37 +5,33 @@ import java.nio.file.Paths;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.example.dto.EmailMessageDto;
+import com.example.dto.kafka.KafkaEmailMessageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class EmailMessageDtoTest {
+class EmailMessageDtoTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testDeserialization() throws Exception {
+    void testDeserialization() throws Exception {
         final var json = Paths.get("src/test/resources/json/EmailMessageTestDeserialization.json").toFile();
-        final var dto = mapper.readValue(json, EmailMessageDto.class);
-
+        final var dto = mapper.readValue(json, KafkaEmailMessageDto.class);
         final var text = dto.getText();
         final var to = dto.getTo();
 
-        Assertions.assertThat("test").isEqualTo(text);
-        Assertions.assertThat("test").isEqualTo(to);
+        Assertions.assertThat(text).isEqualTo("test");
+        Assertions.assertThat(to).isEqualTo("test");
     }
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         final var json = Paths.get("src/test/resources/json/EmailMessageTestSerialization.json").toFile();
-
-        final var dto = EmailMessageDto
+        final var dto = KafkaEmailMessageDto
                 .builder()
                 .to("test")
                 .text("test")
                 .build();
-
         final var expected = mapper.readTree(json).toString();
-
         final var actual = mapper.writeValueAsString(dto);
 
         Assertions.assertThat(actual).isEqualTo(expected);

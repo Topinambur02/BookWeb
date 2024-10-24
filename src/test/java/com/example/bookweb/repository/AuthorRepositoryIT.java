@@ -13,7 +13,7 @@ import com.example.entity.Author;
 import com.example.repository.AuthorRepository;
 
 @DataJpaTest
-public class AuthorRepositoryIT {
+class AuthorRepositoryIT {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -27,7 +27,7 @@ public class AuthorRepositoryIT {
     }
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         final var author1 = Author.builder().build();
         final var author2 = Author.builder().build();
         final var expected = List.of(author1, author2);
@@ -41,16 +41,15 @@ public class AuthorRepositoryIT {
     }
 
     @Test
-    public void testSave() {
+    void testSave() {
         final var expected = Author.builder().build();
-
         final var actual = repository.save(expected);
 
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         final var id = 1L;
         final var expected = Author
                 .builder()

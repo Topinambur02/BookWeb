@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.rest;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorDto {
 
     @Schema(description = "URL запроса", example = "/api/boo")
     private String url;
@@ -19,7 +19,7 @@ public class ErrorResponse {
     private String date;
 
     @Schema(description = "Имя пользователя", example = "login")
-    private String user;
+    private String username;
 
     @Schema(description = "Сообщение об ошибке", example = "No endpoint GET /api/boo.")
     private String message;

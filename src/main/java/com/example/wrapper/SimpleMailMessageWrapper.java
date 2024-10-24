@@ -5,6 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 public class SimpleMailMessageWrapper extends SimpleMailMessage {
     
     public static class Builder {
+
         private String to;
         private String subject;
         private String text;
@@ -26,9 +27,11 @@ public class SimpleMailMessageWrapper extends SimpleMailMessage {
 
         public SimpleMailMessage build() {
             final var message = new SimpleMailMessage();
+
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
+            
             return message;
         }
     }

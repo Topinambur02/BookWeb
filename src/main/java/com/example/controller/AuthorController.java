@@ -3,7 +3,7 @@ package com.example.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.dto.AuthorDto;
+import com.example.dto.rest.AuthorDto;
 import com.example.service.AuthorService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,18 +31,14 @@ public class AuthorController {
 
     @GetMapping
     @Operation(summary = "Получить список всех авторов", description = "Возвращает список DTO всех авторов")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Авторы получены", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
-    })
+    @ApiResponses(@ApiResponse(responseCode = "200", description = "Авторы получены", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthorDto.class))))
     public List<AuthorDto> getAll() {
         return service.getAll();
     }
 
     @PostMapping
     @Operation(summary = "Создать нового автора", description = "Получает DTO автора и создает нового автора")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Автор успешно создан", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDto.class))),
-    })
+    @ApiResponses(@ApiResponse(responseCode = "200", description = "Автор успешно создан", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = AuthorDto.class))))
     public AuthorDto create(@RequestBody AuthorDto dto) {
         return service.create(dto);
     }

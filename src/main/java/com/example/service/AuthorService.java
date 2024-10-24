@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.dto.AuthorDto;
+import com.example.dto.rest.AuthorDto;
 import com.example.mapper.AuthorMapper;
 import com.example.repository.AuthorRepository;
 import com.example.repository.BookRepository;
@@ -35,4 +35,5 @@ public class AuthorService {
 
         return mapper.toDto(savedAuthor);
     }
+    
 }

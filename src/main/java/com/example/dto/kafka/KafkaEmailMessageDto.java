@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.kafka;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailMessageDto {
+public class KafkaEmailMessageDto {
     
     private String to;
+    
     private String text;
 
 }

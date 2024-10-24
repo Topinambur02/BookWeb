@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.rest;
 
 import com.example.enums.Cover;
 
@@ -6,18 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class BookDto {
-
-    @Schema(description = "ID книги", example = "1")
-    private Long id;
+public class BookFilterDto {
 
     @Schema(description = "Название книги", example = "Война и мир")
     private String name;
@@ -31,7 +26,10 @@ public class BookDto {
     @Schema(description = "Количество книг", example = "1")
     private Integer count;
 
-    @Schema(description = "ID автора", example = "1")
-    private Long authorId;
+    @Schema(description = "Фамилия автора", example = "Пушкин")
+    private String authorLastName;
+
+    @Schema(description = "Имя автора", example = "Александр")
+    private String authorFirstName;
     
 }

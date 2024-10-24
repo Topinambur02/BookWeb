@@ -5,37 +5,33 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 
-import com.example.dto.ConfirmRegistrationResponse;
+import com.example.dto.rest.ConfirmRegistrationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ConfirmRegistrationResponseTest {
+class ConfirmRegistrationDtoTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void testSerialization() throws Exception {
+    void testSerialization() throws Exception {
         final var json = Paths.get("src/test/resources/json/ConfirmRegistrationResponseTestSerialization.json").toFile();
-
-        final var response = ConfirmRegistrationResponse
+        final var response = ConfirmRegistrationDto
                 .builder()
                 .confirmation(true)
                 .build();
-
         final var expected = mapper.readTree(json).toString();
-
         final var actual = mapper.writeValueAsString(response);
 
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void testDeserialization() throws Exception {
+    void testDeserialization() throws Exception {
         final var json = Paths.get("src/test/resources/json/ConfirmRegistrationResponseTestDeserialization.json").toFile();
-        final var response = mapper.readValue(json, ConfirmRegistrationResponse.class);
-
+        final var response = mapper.readValue(json, ConfirmRegistrationDto.class);
         final var expected = response.getConfirmation();
 
-        Assertions.assertThat(true).isEqualTo(expected);
+        Assertions.assertThat(expected).isTrue();
     }
 
 }

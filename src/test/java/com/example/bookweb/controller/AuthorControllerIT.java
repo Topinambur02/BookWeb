@@ -20,22 +20,28 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import com.example.controller.AuthorController;
-import com.example.dto.AuthorDto;
+import com.example.dto.rest.AuthorDto;
 import com.example.service.AuthorService;
+import com.example.service.UserDetailsServiceImpl;
+import com.example.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(controllers = AuthorController.class)
-public class AuthorControllerIT {
+@WebMvcTest(AuthorController.class)
+class AuthorControllerIT {
 
         @Autowired
         private MockMvc mockMvc;
         @MockBean
+        private JwtUtils jwtUtils;
+        @MockBean
         private AuthorService service;
+        @MockBean
+        private UserDetailsServiceImpl userDetailsService;
 
         @Test
         @WithMockUser
-        public void testGetAll() throws Exception {
+        void testGetAll() throws Exception {
                 final var authors = List.of(
                                 AuthorDto.builder().id(1L).name("Author 1").build(),
                                 AuthorDto.builder().id(2L).name("Author 2").build());
@@ -51,7 +57,7 @@ public class AuthorControllerIT {
 
         @Test
         @WithMockUser
-        public void testCreate() throws Exception {
+        void testCreate() throws Exception {
                 final var dto = AuthorDto
                                 .builder()
                                 .id(1L)

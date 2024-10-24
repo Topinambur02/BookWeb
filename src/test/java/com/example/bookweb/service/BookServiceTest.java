@@ -15,11 +15,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.example.dto.BookDto;
+import com.example.dto.rest.BookDto;
+import com.example.dto.rest.BookFilterDto;
 import com.example.entity.Author;
 import com.example.entity.Book;
 import com.example.exception.ResourceNotFoundException;
-import com.example.filter.BookFilter;
 import com.example.mapper.BookMapper;
 import com.example.repository.AuthorRepository;
 import com.example.repository.BookRepository;
@@ -188,7 +188,7 @@ class BookServiceTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	void testFilter() {
-		final var filter = BookFilter
+		final var filter = BookFilterDto
 				.builder()
 				.name("Book 1")
 				.build();
