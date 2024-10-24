@@ -1,10 +1,10 @@
-package com.example.security;
+package com.example.utils;
 
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -18,20 +18,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "jwt")
 public class JwtUtils {
 
+    @Value("${jwt.secret}")
     private String secret;
+    @Value("${jwt.expirationMs}")
     private int expirationMs;
 
-    public String generateJwtToken(Authentication auth) {
-        final var userDetails = (UserDetails) auth.getPrincipal();
+    public String generateJwtToken(Authentication authentication) {
+        final var userDetails = (UserDetails) authentication.getPrincipal();
+        final var userName = userDetails.getUsername();
         final var fastTime = new Date().getTime() + expirationMs;
         final var date = new Date(fastTime);
 
         return Jwts
                 .builder()
-                .subject(userDetails.getUsername())
+                .subject(userName)
                 .issuedAt(new Date())
                 .expiration(date)
                 .signWith(key())
@@ -58,7 +60,6 @@ public class JwtUtils {
 
             return true;
         }
-
         catch (Exception e) {
             return false;
         }
@@ -67,4 +68,5 @@ public class JwtUtils {
     private SecretKey key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
+    
 }

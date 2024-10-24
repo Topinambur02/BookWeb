@@ -15,26 +15,31 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.controller.UserController;
-import com.example.dto.ConfirmRegistrationResponse;
-import com.example.dto.SignInDto;
-import com.example.dto.SignUpDto;
-import com.example.dto.TokenResponse;
+import com.example.dto.rest.ConfirmRegistrationDto;
+import com.example.dto.rest.SignInDto;
+import com.example.dto.rest.SignUpDto;
+import com.example.dto.rest.TokenDto;
+import com.example.service.UserDetailsServiceImpl;
 import com.example.service.UserService;
+import com.example.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(controllers = UserController.class)
-public class UserControllerIT {
+@WebMvcTest(UserController.class)
+class UserControllerIT {
 
         @Autowired
         private MockMvc mockMvc;
         @MockBean
+        private JwtUtils jwtUtils;
+        @MockBean
         private UserService service;
+        @MockBean
+        private UserDetailsServiceImpl userDetailsService;
 
         @Test
         @WithMockUser
-        public void testSignUp() throws Exception {
-
+        void testSignUp() throws Exception {
                 final var dto = SignUpDto
                                 .builder()
                                 .username("test")
@@ -48,20 +53,17 @@ public class UserControllerIT {
                                 .content(new ObjectMapper().writeValueAsString(dto)))
                                 .andExpect(status().isOk())
                                 .andExpect(content().json(new ObjectMapper().writeValueAsString(dto)));
-
         }
 
         @Test
         @WithMockUser
-        public void testSignIn() throws Exception {
-
+        void testSignIn() throws Exception {
                 final var dto = SignInDto
                                 .builder()
                                 .username("test")
                                 .password("test")
                                 .build();
-
-                final var response = TokenResponse
+                final var response = TokenDto
                                 .builder()
                                 .build();
 
@@ -75,11 +77,9 @@ public class UserControllerIT {
 
         @Test
         @WithMockUser
-        public void testConfirmRegistration() throws Exception {
-
+        void testConfirmRegistration() throws Exception {
                 final var generatedString = "test";
-
-                final var response = ConfirmRegistrationResponse
+                final var response = ConfirmRegistrationDto
                                 .builder()
                                 .build();
 

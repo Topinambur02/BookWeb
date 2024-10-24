@@ -11,14 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import com.example.dto.EmailMessageDto;
+import com.example.dto.kafka.KafkaEmailMessageDto;
 import com.example.mapper.EmailMessageMapper;
 import com.example.service.EmailConsumerService;
 import com.example.wrapper.SimpleMailMessageWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailConsumerServiceTest {
+class EmailConsumerServiceTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -32,25 +32,23 @@ public class EmailConsumerServiceTest {
     @Test
     void testConsume() throws Exception {
         final var kafkaMessage = "{\"to\": [\"test\"], \"text\": \"Test Text\"}";
-
-        final var dto = EmailMessageDto
+        final var dto = KafkaEmailMessageDto
                 .builder()
                 .to("test")
                 .text("Test Text")
                 .build();
-
         final var simpleMailMessage = SimpleMailMessageWrapper
                 .builder()
                 .to("test")
                 .text("Test Text")
                 .build();
 
-        when(objectMapper.readValue(kafkaMessage, EmailMessageDto.class)).thenReturn(dto);
+        when(objectMapper.readValue(kafkaMessage, KafkaEmailMessageDto.class)).thenReturn(dto);
         when(mapper.toSimpleMailMessage(dto)).thenReturn(simpleMailMessage);
 
         emailConsumerService.consume(kafkaMessage);
 
-        verify(objectMapper, times(1)).readValue(kafkaMessage, EmailMessageDto.class);
+        verify(objectMapper, times(1)).readValue(kafkaMessage, KafkaEmailMessageDto.class);
         verify(mapper, times(1)).toSimpleMailMessage(dto);
         verify(emailSender, times(1)).send(simpleMailMessage);
     }

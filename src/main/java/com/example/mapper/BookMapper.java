@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import com.example.dto.BookDto;
+import com.example.dto.rest.BookDto;
 import com.example.entity.Author;
 import com.example.entity.Book;
 
@@ -21,4 +21,5 @@ public interface BookMapper {
     @Mapping(target = "id", source = "dto.id")
     @Mapping(target = "author", source = "author")
     void update(BookDto dto, Author author, @MappingTarget Book book);
+    
 }

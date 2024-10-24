@@ -26,4 +26,5 @@ public class ResourceNotFoundException extends RuntimeException {
     public static Builder builder() {
         return new Builder();
     }
+    
 }

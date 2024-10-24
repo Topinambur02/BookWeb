@@ -20,23 +20,29 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.controller.BookController;
-import com.example.dto.BookDto;
-import com.example.filter.BookFilter;
+import com.example.dto.rest.BookDto;
+import com.example.dto.rest.BookFilterDto;
 import com.example.service.BookService;
+import com.example.service.UserDetailsServiceImpl;
+import com.example.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(controllers = BookController.class)
-public class BookControllerIT {
+@WebMvcTest(BookController.class)
+class BookControllerIT {
 
         @Autowired
         private MockMvc mockMvc;
         @MockBean
+        private JwtUtils jwtUtils;
+        @MockBean
         private BookService service;
+        @MockBean
+        private UserDetailsServiceImpl userDetailsService;
 
         @Test
         @WithMockUser
-        public void testGetAll() throws Exception {
+        void testGetAll() throws Exception {
                 final var book1 = BookDto
                                 .builder()
                                 .build();
@@ -54,7 +60,7 @@ public class BookControllerIT {
 
         @Test
         @WithMockUser
-        public void testCreate() throws Exception {
+        void testCreate() throws Exception {
                 final var dto = BookDto
                                 .builder()
                                 .id(1L)
@@ -71,8 +77,8 @@ public class BookControllerIT {
 
         @Test
         @WithMockUser
-        public void testDelete() throws Exception {
-                Long bookId = 1L;
+        void testDelete() throws Exception {
+                final var bookId = 1L;
 
                 when(service.delete(bookId)).thenReturn(bookId);
 
@@ -83,8 +89,8 @@ public class BookControllerIT {
 
         @Test
         @WithMockUser
-        public void testFilter() throws Exception {
-                final var filter = BookFilter.builder().build();
+        void testFilter() throws Exception {
+                final var filter = BookFilterDto.builder().build();
                 final var book1 = BookDto.builder().build();
                 final var book2 = BookDto.builder().build();
                 final var expected = List.of(book1, book2);
@@ -99,7 +105,7 @@ public class BookControllerIT {
 
         @Test
         @WithMockUser
-        public void testUpdate() throws Exception {
+        void testUpdate() throws Exception {
                 final var bookId = 1L;
                 final var dto = BookDto
                                 .builder()
