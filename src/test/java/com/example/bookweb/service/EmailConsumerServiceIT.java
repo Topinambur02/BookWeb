@@ -18,7 +18,7 @@ import org.testcontainers.utility.DockerImageName;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 
-import com.example.dto.EmailMessageDto;
+import com.example.dto.kafka.KafkaEmailMessageDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Testcontainers
@@ -32,10 +32,10 @@ public class EmailConsumerServiceIT {
     @Autowired
     private KafkaTemplate<String, String> template;
     @Container
-    private static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:latest"));;
+    private static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:latest"));
 
     @BeforeAll
-    public static void setUp() throws Exception {
+    public static void setUp() {
         kafka.start();
         System.setProperty("spring.kafka.bootstrap-servers", kafka.getBootstrapServers());
     }
@@ -46,14 +46,12 @@ public class EmailConsumerServiceIT {
     }
 
     @Test
-    public void testConsume() throws Exception {
-
-        final var dto = EmailMessageDto
+    void testConsume() throws Exception {
+        final var dto = KafkaEmailMessageDto
                 .builder()
                 .to("test")
                 .text("test")
                 .build();
-
         final var json = objectMapper.writeValueAsString(dto);
 
         template.send("email-message", json);

@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import com.example.dto.AuthorDto;
+import com.example.dto.rest.AuthorDto;
 import com.example.entity.Author;
 import com.example.entity.Book;
 import com.example.mapper.AuthorMapper;
@@ -58,17 +58,14 @@ class AuthorServiceTest {
                                 .builder()
                                 .id(id)
                                 .build();
-
                 final var mappedDto = AuthorDto
                                 .builder()
                                 .id(id)
                                 .build();
-
                 final var mappedAuthor = Author
                                 .builder()
                                 .id(id)
                                 .build();
-
                 final var books = List.of(
                                 Book.builder().build(),
                                 Book.builder().build());

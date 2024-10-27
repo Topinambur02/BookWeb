@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.rest;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenResponse {
+public class ConfirmRegistrationDto {
 
-    @Schema(description = "Токен", example = "eyJhbGcQT4fwpMeJf36POk6yJV_adQssw5c")
-    private String token;
+    @Schema(description = "Подтверждение регистрации", example = "true")
+    private Boolean confirmation;
     
 }

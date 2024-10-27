@@ -1,4 +1,4 @@
-package com.example.filter;
+package com.example.dto.rest;
 
 import com.example.enums.Cover;
 
@@ -6,13 +6,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookFilter {
+@EqualsAndHashCode
+public class BookDto {
+
+    @Schema(description = "ID книги", example = "1")
+    private Long id;
 
     @Schema(description = "Название книги", example = "Война и мир")
     private String name;
@@ -26,10 +31,7 @@ public class BookFilter {
     @Schema(description = "Количество книг", example = "1")
     private Integer count;
 
-    @Schema(description = "Фамилия автора", example = "Пушкин")
-    private String authorLastName;
-
-    @Schema(description = "Имя автора", example = "Александр")
-    private String authorFirstName;
+    @Schema(description = "ID автора", example = "1")
+    private Long authorId;
     
 }

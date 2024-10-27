@@ -13,7 +13,7 @@ import com.example.entity.Book;
 import com.example.repository.BookRepository;
 
 @DataJpaTest
-public class BookRepositoryIT {
+class BookRepositoryIT {
 
     @Autowired
     private BookRepository repository;
@@ -26,7 +26,7 @@ public class BookRepositoryIT {
     }
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         final var book1 = Book.builder().build();
         final var book2 = Book.builder().build();
         final var expected = List.of(book1, book2);
@@ -40,7 +40,7 @@ public class BookRepositoryIT {
     }
 
     @Test
-    public void testFindAllById() {
+    void testFindAllById() {
         final var book1 = Book.builder().id(1L).build();
         final var book2 = Book.builder().id(2L).build();
         final var book3 = Book.builder().id(3L).build();
@@ -57,7 +57,7 @@ public class BookRepositoryIT {
     }
 
     @Test
-    public void testSave() {
+    void testSave() {
         final var expected = Book.builder().build();
 
         final var actual = repository.save(expected);
@@ -66,7 +66,7 @@ public class BookRepositoryIT {
     }
 
     @Test
-    public void testFindById() {
+    void testFindById() {
         final var id = 1L;
         final var expected = Book
                 .builder()
@@ -83,7 +83,7 @@ public class BookRepositoryIT {
     }
 
     @Test
-    public void testDeleteById() {
+    void testDeleteById() {
         final var id = 1L;
         final var book = Book
                 .builder()
@@ -92,6 +92,7 @@ public class BookRepositoryIT {
 
         repository.save(book);
         repository.deleteById(id);
+        
         final var actual = repository.findById(id).isEmpty();
 
         Assertions.assertThat(actual).isTrue();

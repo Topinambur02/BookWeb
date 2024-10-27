@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.dto.BookDto;
+import com.example.dto.rest.BookDto;
+import com.example.dto.rest.BookFilterDto;
 import com.example.exception.ResourceNotFoundException;
-import com.example.filter.BookFilter;
 import com.example.mapper.BookMapper;
 import com.example.repository.AuthorRepository;
 import com.example.repository.BookRepository;
@@ -33,13 +33,11 @@ public class BookService {
 
     public BookDto create(BookDto dto) {
         final var id = dto.getAuthorId();
-
         final var author = authorRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException
                         .builder()
                         .message("Author not found")
                         .build());
-
         final var book = mapper.toBook(dto, author);
         final var savedBook = repository.save(book);
 
@@ -49,13 +47,11 @@ public class BookService {
     public BookDto update(BookDto dto) {
         final var id = dto.getId();
         final var authorId = dto.getAuthorId();
-
         final var updatedBook = repository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException
                         .builder()
                         .message("Book not found")
                         .build());
-
         final var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> ResourceNotFoundException
                         .builder()
@@ -75,7 +71,6 @@ public class BookService {
                         .builder()
                         .message("Book not found")
                         .build());
-
         final var findId = book.getId();
 
         repository.deleteById(findId);
@@ -83,8 +78,7 @@ public class BookService {
         return id;
     }
 
-    public List<BookDto> filter(BookFilter filter) {
-        ;
+    public List<BookDto> filter(BookFilterDto filter) {
         final var bookSpecification = specification.filter(filter);
 
         return repository
