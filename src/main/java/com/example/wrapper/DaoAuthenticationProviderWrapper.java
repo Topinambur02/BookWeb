@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DaoAuthenticationProviderWrapper extends DaoAuthenticationProvider {
 
     public static class Builder {
+        
         private UserDetailsService userDetailsService;
         private PasswordEncoder passwordEncoder;
 
@@ -24,8 +25,10 @@ public class DaoAuthenticationProviderWrapper extends DaoAuthenticationProvider 
 
         public AuthenticationManager build() {
             final var provider = new DaoAuthenticationProviderWrapper();
+
             provider.setUserDetailsService(userDetailsService);
             provider.setPasswordEncoder(passwordEncoder);
+
             return new ProviderManager(provider);
         }
     }
@@ -33,4 +36,5 @@ public class DaoAuthenticationProviderWrapper extends DaoAuthenticationProvider 
     public static Builder builder() {
         return new Builder();
     }
+    
 }

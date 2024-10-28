@@ -9,13 +9,13 @@ import com.example.entity.User;
 import com.example.repository.UserRepository;
 
 @DataJpaTest
-public class UserRepositoryIT {
+class UserRepositoryIT {
 
     @Autowired
     private UserRepository repository;
 
     @Test
-    public void testSave() {
+    void testSave() {
         final var expected = User.builder().build();
 
         final var actual = repository.save(expected);
@@ -24,7 +24,7 @@ public class UserRepositoryIT {
     }
 
     @Test
-    public void testExistsByUsername() {
+    void testExistsByUsername() {
         final var username = "test";
         final var user = User
                 .builder()
@@ -39,7 +39,7 @@ public class UserRepositoryIT {
     }
 
     @Test
-    public void testFindByUsername() {
+    void testFindByUsername() {
         final var username = "test";
         final var expected = User
                 .builder()

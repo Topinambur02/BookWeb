@@ -5,19 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.dto.SignInDto;
-import com.example.dto.SignUpDto;
+import com.example.dto.rest.SignInDto;
+import com.example.dto.rest.SignUpDto;
 import com.example.entity.User;
 import com.example.enums.Role;
 import com.example.mapper.UserMapper;
 
-public class UserMapperTest {
+class UserMapperTest {
 
         private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
         @Test
-        public void testDtoToUser() {
-
+        void testDtoToUser() {
                 final var dto = SignUpDto
                                 .builder()
                                 .id(1L)
@@ -25,7 +24,6 @@ public class UserMapperTest {
                                 .username("test")
                                 .password("test")
                                 .build();
-
                 final var expected = User
                                 .builder()
                                 .id(1L)
@@ -34,9 +32,7 @@ public class UserMapperTest {
                                 .password("test")
                                 .role(Role.GUEST)
                                 .build();
-
                 final var actual = mapper.toUser(dto);
-
                 final var actualPassword = actual.getPassword();
                 final var expectedPassword = expected.getPassword();
                 final var isMatches = new BCryptPasswordEncoder().matches(expectedPassword, actualPassword);
@@ -46,42 +42,39 @@ public class UserMapperTest {
         }
 
         @Test
-        public void testUserToSignInDto() {
+        void testUserToSignInDto() {
                 final var user = User
                                 .builder()
                                 .username("test")
                                 .password("test")
                                 .build();
-
                 final var expected = SignInDto
                                 .builder()
                                 .username("test")
                                 .password("test")
                                 .build();
-
                 final var actual = mapper.toSignInDto(user);
 
                 Assertions.assertThat(actual).isEqualTo(expected);
         }
 
         @Test
-        public void testUserToSignUpDto() {
+        void testUserToSignUpDto() {
                 final var user = User
                                 .builder()
                                 .username("test")
                                 .email("test@mail.ru")
                                 .password("test")
                                 .build();
-
                 final var expected = SignUpDto
                                 .builder()
                                 .username("test")
                                 .email("test@mail.ru")
                                 .password("test")
                                 .build();
-
                 final var actual = mapper.toSignUpDto(user);
 
                 Assertions.assertThat(actual).isEqualTo(expected);
         }
+        
 }

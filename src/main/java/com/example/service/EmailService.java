@@ -4,7 +4,8 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.example.wrapper.SimpleMailMessageWrapper;
+import com.example.dto.rest.EmailMessageDto;
+import com.example.mapper.EmailMessageMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -12,22 +13,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailService {
 
+    private final EmailMessageMapper mapper;
     private final JavaMailSender emailSender;
 
-    public void sendMessage(String to, String subject, String text) {
+    public void sendMessage(EmailMessageDto message) {
         try {
-            final var message = SimpleMailMessageWrapper
-                    .builder()
-                    .to(to)
-                    .subject(subject)
-                    .text(text)
-                    .build();
+            final var simpleMailMessage = mapper.toSimpleMailMessage(message);
 
-            emailSender.send(message);
+            emailSender.send(simpleMailMessage);
         }
-
         catch (MailException e) {
             e.printStackTrace();
         }
     }
+    
 }

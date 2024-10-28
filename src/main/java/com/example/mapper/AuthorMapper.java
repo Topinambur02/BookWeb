@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import com.example.dto.AuthorDto;
+import com.example.dto.rest.AuthorDto;
 import com.example.entity.Author;
 import com.example.entity.Book;
 

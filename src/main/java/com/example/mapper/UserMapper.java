@@ -6,8 +6,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.dto.SignInDto;
-import com.example.dto.SignUpDto;
+import com.example.dto.rest.SignInDto;
+import com.example.dto.rest.SignUpDto;
 import com.example.entity.User;
 
 @Mapper
@@ -33,4 +33,5 @@ public interface UserMapper {
     SignInDto toSignInDto(User user);
 
     SignUpDto toSignUpDto(User user);
+    
 }
