@@ -1,5 +1,8 @@
 package com.example.exception;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
 public class ResourceNotFoundException extends RuntimeException {
     
     public ResourceNotFoundException(String message) {
@@ -10,13 +13,10 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message, cause);
     }
     
+    @Data
+    @Accessors(fluent = true, chain = true)
     public static class Builder {
         private String message;
-
-        public Builder message(String message) {
-            this.message = message;
-            return this;
-        }
 
         public ResourceNotFoundException build() {
             return new ResourceNotFoundException(message);
