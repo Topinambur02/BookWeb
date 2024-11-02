@@ -6,22 +6,17 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
+
 public class DaoAuthenticationProviderWrapper extends DaoAuthenticationProvider {
 
+    @Data
+    @Accessors(fluent = true, chain = true)
     public static class Builder {
         
         private UserDetailsService userDetailsService;
         private PasswordEncoder passwordEncoder;
-
-        public Builder userDetailsService(UserDetailsService userDetailsService) {
-            this.userDetailsService = userDetailsService;
-            return this;
-        }
-
-        public Builder passwordEncoder(PasswordEncoder passwordEncoder) {
-            this.passwordEncoder = passwordEncoder;
-            return this;
-        }
 
         public AuthenticationManager build() {
             final var provider = new DaoAuthenticationProviderWrapper();

@@ -28,31 +28,45 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final var authorizationHeader = request.getHeader("Authorization");
         final var prefix = "Bearer ";
-        final var prefixLength = prefix.length();
-        final var isBearer = StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ");
+        final var isBearer = isBearerToken(request, prefix);
 
         if (!isBearer) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        final var jwt = authorizationHeader.substring(prefixLength);
+        final var jwt = extractJwtFromRequest(request, prefix);
         final var isValidate = service.validateJwtToken(jwt);
 
         if (isValidate) {
-            final var username = service.getUserName(jwt);
-            final var user = userDetailsService.loadUserByUsername(username);
-            final var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            final var details = new WebAuthenticationDetailsSource().buildDetails(request);
-
-            authentication.setDetails(details);
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            setAuthentication(jwt, request);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private boolean isBearerToken(HttpServletRequest request, String prefix) {
+        final var authorizationHeader = request.getHeader("Authorization");
+
+        return StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith(prefix);
+    }
+
+    private String extractJwtFromRequest(HttpServletRequest request, String prefix) {
+        final var prefixLength = prefix.length();
+        return request.getHeader("Authorization").substring(prefixLength);
+    }
+
+    private void setAuthentication(String jwt, HttpServletRequest request) {
+        final var username = service.getUserName(jwt);
+        final var user = userDetailsService.loadUserByUsername(username);
+        final var authorities = user.getAuthorities();
+        final var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+        final var details = new WebAuthenticationDetailsSource().buildDetails(request);
+        
+        authentication.setDetails(details);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 }

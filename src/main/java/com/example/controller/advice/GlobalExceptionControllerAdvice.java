@@ -33,8 +33,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GlobalExceptionControllerAdvice implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final ObjectMapper objectMapper;
 
     // 400: Bad request
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -73,7 +73,10 @@ public class GlobalExceptionControllerAdvice implements AuthenticationEntryPoint
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(jsonResponse);
+
+        final var writer = response.getWriter();
+
+        writer.write(jsonResponse);
     }
 
     private ErrorDto handleException(HttpServletRequest request, Exception exception) {

@@ -39,4 +39,7 @@ public interface EmailMessageMapper {
         return new String[] { dto.getTo() };
     }
 
+    @Mapping(target = "subject", ignore = true)
+    EmailMessageDto toEmailMessageDto(KafkaEmailMessageDto dto);
+
 }

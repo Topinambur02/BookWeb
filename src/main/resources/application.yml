@@ -1,0 +1,47 @@
+
+spring: 
+    application:
+        name: bookweb
+    web:
+        resources:
+            add-mappings: false
+    mail:
+        port: 587
+        protocol: smtp
+        host: smtp.gmail.com
+        username: ENC(sqg++yQvhHxhh7dxNzdkDooXvMMrJ9g6uk3dnxbd8BU=)
+        password: ENC(nF/5UmLweh+qpXtvzvo6kKSHNNXP5HgfqdWE9B9o7B4=)
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                starttls:
+                    enable: true
+                    required: true
+    datasource:
+        username: ENC(t/kn5horL5ZshNQASkkB3qDhCcRLb+xU)
+        password: ENC(AkkFfGme/hizPt1dr2rY/GQkRu2aowOr)
+        url: ENC(SV+W+TQXZjbzUV3nls942GAp++lKF+IOx0Io/u/XRGkdAJiBzshH+/DA825v30C+bqLY1Cd859A=)
+    jpa:
+        hibernate: 
+            ddl-auto: none
+        open-in-view: true
+    liquibase:
+        change-log: classpath:db/changelog/changelog.xml
+
+server:
+    servlet: 
+        context-path: /api/
+
+jwt: 
+    secret: slvndggucsudvsoygfsjdggfvfdvhjbdfvuvvukjsdcljsvbdvjblduvjbdv
+    expirationMs: 86400000
+
+jasypt:
+    encryptor:
+        password: sdvbjshbvsshvshvshchsdcvssjfv
+        algorithm: PBEWithMD5AndDES
+        iv-generator-classname: org.jasypt.iv.NoIvGenerator
+        salt-generator-classname: org.jasypt.salt.RandomSaltGenerator
+        string-output-type: base64
+
